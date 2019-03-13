@@ -710,27 +710,12 @@ class Scratch3ArduinoBlocks {
                         }
                     }
                 },
-                /*{
-                    opcode: 'whenDistanceLessThan',
-                    text: formatMessage({
-                        id: 'arduino.whenDistanceLessThan',
-                        default: 'When Distance < [DISTANCE]',
-                        description: 'when value measured by distance sensor is less than some value'
-                    }),
-                    blockType: BlockType.HAT,
-                    arguments: {
-                        DISTANCE: {
-                            type: ArgumentType.NUMBER,
-                            defaultValue: 50
-                        }
-                    }
-                },*/
                 {
                     opcode: 'ultrasonicDistance',
                     text: formatMessage({
                         id: 'arduino.ultrasonicDistance',
                         default: 'Ultrasonic Distance [PORT]',
-                        description: 'Ultrasonic Distance'
+                        description: 'Ultrasonic sensor using one wire'
                     }),
                     blockType: BlockType.REPORTER,
                     arguments: {
@@ -739,6 +724,27 @@ class Scratch3ArduinoBlocks {
                             menu: 'portMode',
                             defaultValue: 0
                         }
+                    }
+                },
+				{
+                    opcode: 'ultrasonicDistance2W',
+                    text: formatMessage({
+                        id: 'arduino.ultrasonicDistance2W',
+                        default: 'Ultrasonic Distance [TRIG] [ECHO]',
+                        description: 'Ultrasonic sensor using two wires'
+                    }),
+                    blockType: BlockType.REPORTER,
+                    arguments: {
+                        TRIG: {
+                            type: ArgumentType.STRING,
+                            menu: 'portMode',
+                            defaultValue: 'TRIG'
+                        },
+						ECHO: {
+                            type: ArgumentType.STRING,
+                            menu: 'portMode',
+                            defaultValue: 'ECHO'							
+						}
                     }
                 },
                 {
@@ -809,21 +815,32 @@ class Scratch3ArduinoBlocks {
                         }
                     }
                 },
-                {
-                    opcode: 'motorStop',
+				{
+                    opcode: 'motorSetup',
                     text: formatMessage({
-                        id: 'arduino.motorStop',
-                        default: 'Motor Stop',
-                        description: 'motor Stop'
+                        id: 'arduino.motorSetup',
+						default: 'Motor L [PORTL] Motor R [PORTR]',
+                        description: 'setting up the motor pins'
                     }),
                     blockType: BlockType.COMMAND,
-
-                },
+                    arguments: {
+						PORTL:{
+                            type: ArgumentType.STRING,
+                            menu: 'portMode',
+                            defaultValue: 0
+						},
+						PORTR:{
+                            type: ArgumentType.STRING,
+                            menu: 'portMode',
+                            defaultValue: 1
+						}
+                    }					
+				},
 				{
                     opcode: 'motorControl',
                     text: formatMessage({
                         id: 'arduino.motorControl',
-						default: 'Motor L [DIRL] [POWERL] & Motor R [DIRR] [POWERR]',
+						default: 'Motor L [DIRL] [POWERL] Motor R [DIRR] [POWERR]',
                         description: 'controlling the speeds and directions of left and right motor'
                     }),
                     blockType: BlockType.COMMAND,
@@ -847,6 +864,16 @@ class Scratch3ArduinoBlocks {
                             defaultValue: 110
                         }
                     }
+                },                
+				{
+                    opcode: 'motorStop',
+                    text: formatMessage({
+                        id: 'arduino.motorStop',
+                        default: 'Motor Stop',
+                        description: 'motor Stop'
+                    }),
+                    blockType: BlockType.COMMAND,
+
                 }
             ],
             menus: {
@@ -1005,14 +1032,6 @@ class Scratch3ArduinoBlocks {
         return data;
 
     }
-
-   /* whenDistanceLessThan(args) {
-        ultrasonic = 1;
-        ultrasonicPin = 12;
-        const distance = Number(args.DISTANCE);
-        return Number(this._device.digitalRead(0)) < distance;
-    }*/
-
     ultrasonicDistance(args) {
         ultrasonic = 1;
         ultrasonicPin = Number(args.PIN);
@@ -1022,6 +1041,9 @@ class Scratch3ArduinoBlocks {
         return data;
 
     }
+	ultrasonicDistance2W(args) {
+		return String(args.TRIG) + String(args.ECHO);
+	}
     infraredTrack(args){
         const data = this._device.digitalRead(2);
         console.info("ir reflect = " + data);
@@ -1037,21 +1059,20 @@ class Scratch3ArduinoBlocks {
         console.info("humidity = " + data);
         return data;
     }
-
     lcdDisplay(args) {
         const value = args.VALUE;
         return this._device.lcdDisplay(value);
     }
-
     motorInit() {
 								 
         return this._device.motorInit();
     }
-
+	motorSetup(args){
+		return String(args.PORTL) + String(args.PORTR);
+	}
     motorStop(args) {
         return this._device.motorStop();
     }
-
     motorControl(args) {
         const dirL = Cast.toNumber(args.DIRL);
         const powerL = Cast.toNumber(args.POWERL);
@@ -1059,13 +1080,11 @@ class Scratch3ArduinoBlocks {
         const powerR = Cast.toNumber(args.POWERR);
         return this._device.motorControl(dirL, powerL, dirR, powerR);
     }
-
     whenBrightnessLessThan(args) {
         const brightness = MathUtil.clamp(Cast.toNumber(args.DISTANCE), 0, 100);
 
         return this._device.brightness < brightness;
     }
-
     buttonPressed(args) {
         const port = Cast.toNumber(args.PORT);
 
@@ -1075,7 +1094,6 @@ class Scratch3ArduinoBlocks {
 
         return this._device.isButtonPressed(port);
     }
-
     getDistance() {
         return this._device.distance;
     }
@@ -1083,11 +1101,9 @@ class Scratch3ArduinoBlocks {
     getBrightness() {
         return this._device.brightness;
     }
-
     reconnect(id) {
         return this._device.connectDevice(id);
     }
-
     beep(args) {
         const note = MathUtil.clamp(Cast.toNumber(args.NOTE), 47, 99); // valid Arduino sounds
         let time = Cast.toNumber(args.TIME) * 1000;
@@ -1096,7 +1112,6 @@ class Scratch3ArduinoBlocks {
         if (time === 0) {
             return; // don't send a beep time of 0
         }
-
         // https://en.wikipedia.org/wiki/MIDI_tuning_standard#Frequency_values
         const freq = Math.pow(2, ((note - 69 + 12) / 12)) * 440;
         Proximity

@@ -7,8 +7,8 @@ const BlockType = require('./block-type');
 // These extensions are currently built into the VM repository but should not be loaded at startup.
 // TODO: move these out into a separate repository?
 // TODO: change extension spec so that library info, including extension ID, can be collected through static methods
-<<<<<<< HEAD
-const Scratch3PenBlocks = require('../extensions/scratch3_pen');
+
+/*const Scratch3PenBlocks = require('../extensions/scratch3_pen');
 const Scratch3WeDo2Blocks = require('../extensions/scratch3_wedo2');
 const Scratch3MusicBlocks = require('../extensions/scratch3_music');
 const Scratch3MicroBitBlocks = require('../extensions/scratch3_microbit');
@@ -18,7 +18,8 @@ const Scratch3VideoSensingBlocks = require('../extensions/scratch3_video_sensing
 const Scratch3Speech2TextBlocks = require('../extensions/scratch3_speech2text');
 const Scratch3Ev3Blocks = require('../extensions/scratch3_ev3');
 const Scratch3MakeyMakeyBlocks = require('../extensions/scratch3_makeymakey');
-const Scratch3ArduinoBlocks = require('../extensions/scratch3_arduino');
+const Scratch3ArduinoBlocks = require('../extensions/scratch3_arduino');*/
+
 // todo: only load this extension once we have a compatible way to load its
 // Vernier module dependency.
 // const Scratch3GdxForBlocks = require('../extensions/scratch3_gdx_for');

@@ -5,8 +5,8 @@ const formatMessage = require('format-message');
 const MathUtil = require('../../util/math-util');
 const five = require("johnny-five");
 const ComPort = require('../../io/comport');
-
 const async = require("async");
+
 let now = 0;
 let board;
 let motorStatus = 0;
@@ -622,6 +622,21 @@ class Scratch3ArduinoBlocks {
                         }
                     }
                 },
+				                {
+                    opcode: 'serial_begin',
+                    text: formatMessage({
+                        id: 'arduino.serial_begin',
+                        default: 'Serial Begin [Baud]',
+                        description: 'set serial connection'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        Baud: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 9600
+                        }
+                    }
+                },
                 {
                     opcode: 'digital_write',
                     text: formatMessage({
@@ -985,6 +1000,11 @@ class Scratch3ArduinoBlocks {
     }
 
 	variable_create(args){
+		let variable = String(args.TYPE)+String(args.NAME)+String(args.VALUE);
+		return variable;
+	}
+	
+	serial_begin(args){
 		let variable = String(args.TYPE)+String(args.NAME)+String(args.VALUE);
 		return variable;
 	}

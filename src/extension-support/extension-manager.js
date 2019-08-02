@@ -41,7 +41,8 @@ const builtinExtensions = {
     makeymakey: () => require('../extensions/scratch3_makeymakey'),
 	arduino: () => require('../extensions/scratch3_arduino'),
     boost: () => require('../extensions/scratch3_boost'),
-    gdxfor: () => require('../extensions/scratch3_gdx_for')
+    gdxfor: () => require('../extensions/scratch3_gdx_for'),
+	sensor: () => require('../extensions/scratch3_sensor')
 
 };
 

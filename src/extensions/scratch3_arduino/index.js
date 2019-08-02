@@ -13,7 +13,7 @@ let motorStatus = 0;
 let first = true;
 let ultrasonicPin = 12;
 let lastValue;
-let digitalPinArray = new Array();								  
+let digitalPinArray = new Array();
 
 // digitalArray 0:ultrasonic-distance 1:temperature 2-13:pin2-pin13 14-19:A0-A5 20-21:color-reflect
 let digitalArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];// 0:ultrasonic distance 1:
@@ -22,11 +22,11 @@ let motor_init = 0;
 let lcd_init = 0;
 let lcd;
 let poll = 0;
-let startRun = 0;				 
+let startRun = 0;
 let ultrasonic = 0;
 let readDigitalFlag = 0, readDigitalTime = 0;
 let main;
-let displaycount = 0;				 					
+let displaycount = 0;
 const BLEUUID = {
     service: 0xffe0,
     rxChar: '2a00',
@@ -46,31 +46,16 @@ const blockIconURI = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFwAAACACAIA
  * High-level primitives / constants used by the extension.
  * @type {object}
  */
-var PIN_MODE = [
+const PIN_MODE = [
 	{
-	  name: 'Digital Input',
-	  id: 'arduino.pinMode.digitalInput',
+	  name: 'Input',
+	  id: 'arduino.pinMode.Input',
 	  value: 0
-	}, 
+	},
 	{
-	  name: 'Digital Output',
-	  id: 'arduino.pinMode.digitalOutput',
+	  name: 'Output',
+	  id: 'arduino.pinMode.Output',
 	  value: 1
-	}, 
-	{
-	  name: 'Analog Input',
-	  id: 'arduino.pinMode.analogInput',
-	  value: 2
-	}, 
-	{
-	  name: 'Analog Output (PWM)',
-	  id: 'arduino.pinMode.analogOutput',
-	  value: 3
-	}, 
-	{
-	  name: 'Servo',
-	  id: 'arduino.pinMode.servo',
-	  value: 4
 	}
 ];
 
@@ -82,12 +67,12 @@ const VALID_PIN_MODE = [0, 1, 2, 3, 4];
  *       the Arduino hub.
  * @type {array}
  */
-var PIN_LEVEL = [
+const PIN_LEVEL = [
 	{
 	  name: 'low',
 	  id: 'arduino.pinLevel.low',
 	  value: 0
-	}, 
+	},
 	{
 	  name: 'high',
 	  id: 'arduino.pinLevel.high',
@@ -95,92 +80,37 @@ var PIN_LEVEL = [
 	}
 ];
 
-var MOTOR_DIR = [
-	{
-	  name: 'Forward',
-	  id: 'arduino.motorDir.forward',
-	  value: 1
-	}, 
-	{
-	  name: 'Backward',
-	  id: 'arduino.motorDir.backward',
-	  value: 0
-	}
-];
-var PORT_MODE = [
-	{
-	  name: 'Port 1 (Digital)',
-	  id: 'arduino.portMode.1',
-	  value: 12
-	}, 
-	{
-	  name: 'Port 2 (Digital)',
-	  id: 'arduino.portMode.2',
-	  value: 13
-	}, 
-	{
-	  name: 'Port 3 (Analog)',
-	  id: 'arduino.portMode.3',
-	  value: 0
-	}, 
-	{
-	  name: 'Port 4 (Analog)',
-	  id: 'arduino.portMode.4',
-	  value: 1
-	}, 
-	{
-	  name: 'Port 5 (Analog)',
-	  id: 'arduino.portMode.5',
-	  value: 2
-	}, 
-	{
-	  name: 'Port 6 (Analog)',
-	  id: 'arduino.portMode.6',
-	  value: 3
-	}, 
-	{
-	  name: 'Port 7 (PWM)',
-	  id: 'arduino.portMode.7',
-	  value: 3
-	}, 
-	{
-	  name: 'Port 8 (PWM)',
-	  id: 'arduino.portMode.8',
-	  value: 9
-	}
-];
-
-var Variable_Type = [
+const Variable_Type = [
 	{
 	  name: 'Integer',
 	  id: 'arduino.variableType.integer',
 	  value: "int"
-	}, 
+	},
 	{
 	  name: 'Long',
 	  id: 'arduino.variableType.long',
 	  value: "long"
-	}, 
+	},
 	{
 	  name: 'Double',
 	  id: 'arduino.variableType.double',
 	  value: "double"
-	}, 
+	},
 	{
 	  name: 'Float',
 	  id: 'arduino.variableType.float',
 	  value: "float"
-	}, 
+	},
 	{
 	  name: 'Byte',
 	  id: 'arduino.variableType.byte',
 	  value: "byte"
-	}, 
+	},
 	{
 	  name: 'Char',
 	  id: 'arduino.variableType.char',
 	  value: "char"
-	}, 
+	},
 	{
 	  name: 'String',
 	  id: 'arduino.variableType.string',
@@ -188,7 +118,18 @@ var Variable_Type = [
 	}
 ];
 
+const Baudrate = [
+	{name: '9600',   value: 9600,   id: null},
+	{name: '19200',  value: 19200,  id: null},
+	{name: '38400',  value: 38400,  id: null},
+	{name: '57600',  value: 57600,  id: null},
+	{name: '115200', value: 115200, id: null}
+
+];
+
 const VALID_PIN_LEVEL = [0, 1];
+
+const NEW_LINE = [{name: 'WRAP', value: 'Serial.println'}, {name:'NO WRAP', value: 'Serial.print'}];
 
 class Arduino {
 
@@ -203,7 +144,7 @@ class Arduino {
         this._runtime = runtime;
         this._runtime.on('PROJECT_STOP_ALL', this._stopAll.bind(this));
         this._runtime.on('PROJECT_RUN_STOP', this._stopRun.bind(this));
-        this._runtime.on('PROJECT_RUN_START', this._startRun.bind(this));																	 
+        this._runtime.on('PROJECT_RUN_START', this._startRun.bind(this));
         //this._readDataArry = [];
         this._pollingIntervalID = null;
         this._pollingCounter = 0;
@@ -247,7 +188,7 @@ class Arduino {
         }
         this._onSessionConnect();
     };
-	
+
     // TODO: keep here? / refactor
     /**
      * Called by the runtime when user wants to disconnect from the device.
@@ -268,7 +209,7 @@ class Arduino {
         let connected = false;
         if (this._bt) {
             connected = this._bt.isConnected();
-        }			   
+        }
         return connected;
 
     };
@@ -277,7 +218,7 @@ class Arduino {
         //console.info('setPinMode(' + pin + "," + mode + ")");
         board = this._bt.getBoard();
         board.pinMode(pin, mode);
-        this.sleepus(70000);							
+        this.sleepus(70000);
     };
 
     digitalwrite(pin, level) {
@@ -285,7 +226,7 @@ class Arduino {
         //console.info('digitalWrite(' + pin + "," + level + ")");
         board = this._bt.getBoard();
         board.digitalWrite(pin, level);
-		this.sleepus(1200);				   
+		this.sleepus(1200);
     };
 
     analogWrite(pin, value) {
@@ -293,7 +234,7 @@ class Arduino {
         //console.info('analogWrite(' + pin + "," + value + ")");
         board = this._bt.getBoard();
         board.analogWrite(pin, value);
-        this.sleepus(1200);						   
+        this.sleepus(1200);
     }
 
     servoWrite(pin, degree) {
@@ -342,10 +283,9 @@ class Arduino {
         var startTime = process.hrtime();
         var deltaTime;
         var usWaited = 0;
-												
         while (usDelay > usWaited) {
             deltaTime = process.hrtime(startTime);
-            usWaited = (deltaTime[0] * 1E9 + deltaTime[1]) / 1000;				   
+            usWaited = (deltaTime[0] * 1E9 + deltaTime[1]) / 1000;
         }
     }
 
@@ -411,11 +351,10 @@ class Arduino {
         readDigitalTime = 0;
         startRun = 1;
 
-    }	 
+    }
     _stopAllMotors() {
         this.analogWrite(10, 0);
-        this.analogWrite(9, 0);						   
-
+        this.analogWrite(9, 0);
     }
 
     // TODO: keep here? / refactor
@@ -540,7 +479,7 @@ class Arduino {
 }
 
 class Scratch3ArduinoBlocks {
-	
+
 
     /**
      * Creates a new instance of the Arduino extension.
@@ -564,8 +503,8 @@ class Scratch3ArduinoBlocks {
      */
     static get EXTENSION_ID() {
         return 'arduino';
-    }						  
-	/**  
+    }
+	/**
      * Define the Arduino extension.
      * @return {object} Extension description.
      */
@@ -576,12 +515,38 @@ class Scratch3ArduinoBlocks {
             name: 'Ainobot',
             blockIconURI: blockIconURI,
             showStatusButton: true,
+			colour: '#FF6680',
+			colourSecondary: '#FF4D6A',
+			colourTertiary: '#FF3355',
             blocks: [
+				{
+                    opcode: 'setup',
+					blockType: BlockType.HAT,
+					branchCount: 1,
+                    text: formatMessage({
+                        id: 'arduino.setup',
+						default: 'Setup',
+                        description: 'arduino setup'
+                    }),
+					arguments: { }
+                },
+				{
+                    opcode: 'loop',
+					blockType: BlockType.LOOP,
+					branchCount: 1,
+					isTerminal: true,
+                    text: formatMessage({
+                        id: 'arduino.loop',
+						default: 'Loop',
+                        description: 'arduino loop'
+                    }),
+					arguments: { }
+                },
                 {
                     opcode: 'variable_create',
                     text: formatMessage({
                         id: 'arduino.variable_create',
-					default: 'Create[TYPE][NAME] as [VALUE]',
+						default: 'Create[TYPE][NAME] as [VALUE]',
                         description: 'set pin mode'
                     }),
                     blockType: BlockType.COMMAND,
@@ -594,14 +559,14 @@ class Scratch3ArduinoBlocks {
                         NAME: {
                             type: ArgumentType.STRING,
                             defaultValue: "Name"
-              
+
                         },
 						VALUE: {
                             type: ArgumentType.STRING,
                             defaultValue: ""
                         }
                     }
-                },			
+                },
                 {
                     opcode: 'pin_mode',
                     text: formatMessage({
@@ -618,11 +583,11 @@ class Scratch3ArduinoBlocks {
                         MODE: {
                             type: ArgumentType.STRING,
                             menu: 'pinMode',
-                            defaultValue: 0                   
+                            defaultValue: 0
                         }
                     }
                 },
-				                {
+				{
                     opcode: 'serial_begin',
                     text: formatMessage({
                         id: 'arduino.serial_begin',
@@ -633,7 +598,28 @@ class Scratch3ArduinoBlocks {
                     arguments: {
                         Baud: {
                             type: ArgumentType.NUMBER,
+							menu: 'baudrate',
                             defaultValue: 9600
+                        }
+                    }
+                },
+				{
+                    opcode: 'serial_print',
+                    text: formatMessage({
+                        id: 'arduino.serial_print',
+                        default: 'Serial Print [VALUE] [NL]',
+                        description: 'serial print data'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        VALUE: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'Hello'
+                        },
+						NL: {
+                            type: ArgumentType.STRING,
+                            menu: 'newLine',
+							defaultValue: 'WRAP'
                         }
                     }
                 },
@@ -702,7 +688,7 @@ class Scratch3ArduinoBlocks {
                         default: 'Digital Read [PIN]',
                         description: 'digital Read pin'
                     }),
-                    blockType: BlockType.REPORTER,
+                    blockType: BlockType.BOOLEAN,
                     arguments: {
                         PIN: {
                             type: ArgumentType.NUMBER,
@@ -717,7 +703,7 @@ class Scratch3ArduinoBlocks {
                         default: 'Analog Read [PIN]',
                         description: 'Analog Read pin'
                     }),
-                    blockType: BlockType.REPORTER,
+                    blockType: BlockType.BOOLEAN,
                     arguments: {
                         PIN: {
                             type: ArgumentType.NUMBER,
@@ -725,178 +711,14 @@ class Scratch3ArduinoBlocks {
                         }
                     }
                 },
-                {
-                    opcode: 'ultrasonicDistance',
-                    text: formatMessage({
-                        id: 'arduino.ultrasonicDistance',
-                        default: 'Ultrasonic Distance [PORT]',
-                        description: 'Ultrasonic sensor using one wire'
-                    }),
-                    blockType: BlockType.REPORTER,
-                    arguments: {
-                        PORT: {
-                            type: ArgumentType.STRING,
-                            menu: 'portMode',
-                            defaultValue: 0
-                        }
-                    }
-                },
-				{
-                    opcode: 'ultrasonicDistance2W',
-                    text: formatMessage({
-                        id: 'arduino.ultrasonicDistance2W',
-                        default: 'Ultrasonic Distance [TRIG] [ECHO]',
-                        description: 'Ultrasonic sensor using two wires'
-                    }),
-                    blockType: BlockType.REPORTER,
-                    arguments: {
-                        TRIG: {
-                            type: ArgumentType.STRING,
-                            menu: 'portMode',
-                            defaultValue: 'TRIG'
-                        },
-						ECHO: {
-                            type: ArgumentType.STRING,
-                            menu: 'portMode',
-                            defaultValue: 'ECHO'							
-						}
-                    }
-                },
-                {
-                    opcode: 'infraredTrack',
-                    text: formatMessage({
-                        id: 'arduino.infraredTrack',
-                        default: 'IR Reflect [MODE] [PORT]',
-                        description: 'infrared sensors used to track line'
-                    }),
-                    blockType: BlockType.REPORTER,
-                    arguments: {
-                        MODE:{
-                            type: ArgumentType.STRING,
-                            menu: 'pinMode',
-                            defaultValue: 0
-                        },
-                        PORT: {
-                            type: ArgumentType.STRING,
-                            menu: 'portMode',
-                            defaultValue: 0
-                        }
-                    }
-                },
-                {
-                    opcode: 'temperature',
-                    text: formatMessage({
-                        id: 'arduino.temperature',
-                        default: 'Temperature [PORT]',
-                        description: 'get temperature from thermostat sensor at pin #'
-                    }),
-                    blockType: BlockType.REPORTER,
-                    arguments: {
-                        PORT: {
-                            type: ArgumentType.STRING,
-                            menu: 'portMode',
-                            defaultValue: 0
-                        }
-                    }
-                },
-                {
-                    opcode: 'humidity',
-                    text: formatMessage({
-                        id: 'arduino.humidity',
-                        default: 'Humidity [PORT]',
-                        description: 'get humidity from DHT sensor at pin #'
-                    }),
-                    blockType: BlockType.REPORTER,
-                    arguments: {
-                        PORT: {
-                            type: ArgumentType.STRING,
-                            menu: 'portMode',
-                            defaultValue: 0
-                        }
-                    }
-                },
-                {
-                    opcode: 'lcdDisplay',
-                    text: formatMessage({
-                        id: 'arduino.lcdDisplay',
-                        default: 'LCD Display [VALUE]',
-                        description: 'LCD display String'
-                    }),
-                    blockType: BlockType.COMMAND,
-                    arguments: {
-                        VALUE: {
-                            type: ArgumentType.STRING,
-                            defaultValue: 0
-                        }
-                    }
-                },
-				{
-                    opcode: 'motorSetup',
-                    text: formatMessage({
-                        id: 'arduino.motorSetup',
-						default: 'Motor L [PORTL] Motor R [PORTR]',
-                        description: 'setting up the motor pins'
-                    }),
-                    blockType: BlockType.COMMAND,
-                    arguments: {
-						PORTL:{
-                            type: ArgumentType.STRING,
-                            menu: 'portMode',
-                            defaultValue: 0
-						},
-						PORTR:{
-                            type: ArgumentType.STRING,
-                            menu: 'portMode',
-                            defaultValue: 1
-						}
-                    }					
-				},
-				{
-                    opcode: 'motorControl',
-                    text: formatMessage({
-                        id: 'arduino.motorControl',
-						default: 'Motor L [DIRL] [POWERL] Motor R [DIRR] [POWERR]',
-                        description: 'controlling the speeds and directions of left and right motor'
-                    }),
-                    blockType: BlockType.COMMAND,
-                    arguments: {
-						DIRL:{
-                            type: ArgumentType.STRING,
-                            menu: 'motorDir',
-                            defaultValue: 0
-						},
-                        POWERL: {
-                            type: ArgumentType.NUMBER,
-                            defaultValue: 110
-                        },
-						DIRR:{
-                            type: ArgumentType.STRING,
-                            menu: 'motorDir',
-                            defaultValue: 0
-						},
-                        POWERR: {
-                            type: ArgumentType.NUMBER,
-                            defaultValue: 110
-                        }
-                    }
-                },                
-				{
-                    opcode: 'motorStop',
-                    text: formatMessage({
-                        id: 'arduino.motorStop',
-                        default: 'Motor Stop',
-                        description: 'motor Stop'
-                    }),
-                    blockType: BlockType.COMMAND,
 
-                }
             ],
             menus: {
                 pinMode: this._buildMenu(PIN_MODE),
                 pinLevel: this._buildMenu(PIN_LEVEL),
-                portMode: this._buildMenu(PORT_MODE),
-				motorDir: this._buildMenu(MOTOR_DIR),
-				varType: this._buildMenu(Variable_Type)
+				varType: this._buildMenu(Variable_Type),
+				baudrate: this._buildMenu(Baudrate),
+				newLine: this._buildMenu(NEW_LINE)
             },
         };
     }
@@ -946,45 +768,16 @@ class Scratch3ArduinoBlocks {
             }
         ];
     }
-    get SETPORTMODE () {
-        return [
-            {
-                name: 'Port 1 (Digital)',
-                value: 12
-            },
-            {
-                name: 'Port 2 (Digital)',
-                value: 13
-            },
-            {
-                name: 'Port 3 (Analog)',
-                value: 0
-            },
-            {
-                name: 'Port 4 (Analog)',
-                value: 1
-            },
-            {
-                name: 'Port 5 (Analog)',
-                value: 2
-            },
-            {
-                name: 'Port 6 (Analog)',
-                value: 3
-            },
-            {
-                name: 'Port 7 (PWM)',
-                value: 3
-            },
-            {
-                name: 'Port 8 (PWM)',
-                value: 9
-            }
-        ];
-    }
-	
 	get SETVariableType (){
 		return Variable_Type;
+	}
+
+	get SETBaudrate (){
+		return Baudrate;
+	}
+
+	get SETNEWLINE (){
+		return NEW_LINE;
 	}
 
     _buildMenu(info) {
@@ -993,22 +786,38 @@ class Scratch3ArduinoBlocks {
         obj.text = formatMessage({
           id: entry.id,
           default: entry.name
-        }), obj.name = entry.name;
+        });
+		obj.name = entry.name;
         obj.value = String(index);
+		obj.colour = '#FF8C00';
         return obj;
       });
     }
-
+	setup(args){
+		if(args == null){
+			return "";
+		}
+		else return String(args);
+	}
+	loop(args){
+		if(args == null){
+			return "";
+		}
+		else return String(args);
+	}
 	variable_create(args){
 		let variable = String(args.TYPE)+String(args.NAME)+String(args.VALUE);
 		return variable;
 	}
-	
+
 	serial_begin(args){
 		let variable = String(args.TYPE)+String(args.NAME)+String(args.VALUE);
 		return variable;
 	}
-	
+	serial_print(args){
+		let variable = String(args.TYPE) + String(args.VALUE) + String(args.NL);
+		return variable;
+	}
     pin_mode(args) {
         const pin = Cast.toNumber(args.PIN);
         const mode = Cast.toNumber(args.MODE);
@@ -1038,7 +847,7 @@ class Scratch3ArduinoBlocks {
     }
 
     digital_read(args) {
-        readDigitalFlag == 1;							 
+        readDigitalFlag == 1;
         let pin = Cast.toNumber(args.PIN);
         let data = this._device.digitalRead(pin);
         console.info('digitalRead data=' + data);
@@ -1051,54 +860,6 @@ class Scratch3ArduinoBlocks {
         //console.info("analoglRead data=" + data);
         return data;
 
-    }
-    ultrasonicDistance(args) {
-        ultrasonic = 1;
-        ultrasonicPin = Number(args.PIN);
-        //let data = this._device.ultrasonicDistance(ultrasonicPin);
-        const data = this._device.digitalRead(0);
-        console.info("ultrasonicDistance=" + data);
-        return data;
-
-    }
-	ultrasonicDistance2W(args) {
-		return String(args.TRIG) + String(args.ECHO);
-	}
-    infraredTrack(args){
-        const data = this._device.digitalRead(2);
-        console.info("ir reflect = " + data);
-        return data;
-    }
-    temperature(args){
-        const data = this._device.digitalRead(3);
-        console.info("temperature = " + data);
-        return data;
-    }
-    humidity(args){
-        const data = this._device.digitalRead(4);
-        console.info("humidity = " + data);
-        return data;
-    }
-    lcdDisplay(args) {
-        const value = args.VALUE;
-        return this._device.lcdDisplay(value);
-    }
-    motorInit() {
-								 
-        return this._device.motorInit();
-    }
-	motorSetup(args){
-		return String(args.PORTL) + String(args.PORTR);
-	}
-    motorStop(args) {
-        return this._device.motorStop();
-    }
-    motorControl(args) {
-        const dirL = Cast.toNumber(args.DIRL);
-        const powerL = Cast.toNumber(args.POWERL);
-        const dirR = Cast.toNumber(args.DIRR);
-        const powerR = Cast.toNumber(args.POWERR);
-        return this._device.motorControl(dirL, powerL, dirR, powerR);
     }
     whenBrightnessLessThan(args) {
         const brightness = MathUtil.clamp(Cast.toNumber(args.DISTANCE), 0, 100);
@@ -1134,7 +895,6 @@ class Scratch3ArduinoBlocks {
         }
         // https://en.wikipedia.org/wiki/MIDI_tuning_standard#Frequency_values
         const freq = Math.pow(2, ((note - 69 + 12) / 12)) * 440;
-        Proximity
         return this._device.beep(freq, time);
     }
 }

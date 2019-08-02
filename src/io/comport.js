@@ -92,7 +92,7 @@ class ComPort {
         console.info("enter disconnectSession ");
         if (this._board)
             this._board.transport.close();
-        this._connected = false;
+        this._connected = true;
         this._runtime.emit(this._runtime.constructor.PERIPHERAL_CONNECTED);
     }
 

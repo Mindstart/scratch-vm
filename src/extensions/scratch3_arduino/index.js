@@ -336,6 +336,10 @@ class Arduino {
         if (!this._bt.isConnected()) return;
         // console.info('analogWrite(' + pin + "," + value + ")");
         board = this._bt.getBoard();
+        if(board === undefined) {
+            console.log('err: board is undefined');
+            return;
+        }
         board.analogWrite(pin, value);
         this.sleepus(1200);
     }

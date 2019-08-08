@@ -171,6 +171,19 @@ const DIGITAL_PIN = [
         value: 19
     }
 ];
+const DHT11_TYPE = [
+    {
+        name: 'temperature',
+        id: 'sensor.dht11.temperature',
+        value: 'temperature'
+    },
+    {
+        name: 'humidity',
+        id: 'sensor.dht11.humidity',
+        value: 'humidity'
+
+    }
+];
 const BMP_DATA = [
 	{name: 'temperature', value: 'temperature', id: null},
 	{name: 'pressure', value: 'pressure', id: null},
@@ -246,58 +259,79 @@ class SensorBlocks {
                     }
                 },
                 {
-                    opcode: 'infraredTrack',
+                    opcode: 'dht11',
                     text: formatMessage({
-                        id: 'sensor.infraredTrack',
-                        default: 'IR Reflect [MODE] [PORT]',
-                        description: 'infrared sensors used to track line'
+                        id: 'sensor.dht11',
+                        default: 'Read pin [PIN] DHT11 [TYPE]',
+                        description: 'Read DHT11'
                     }),
                     blockType: BlockType.REPORTER,
                     arguments: {
-                        MODE:{
-                            type: ArgumentType.STRING,
-                            menu: 'dataType',
+                        PIN: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
                             defaultValue: 0
                         },
-                        PORT: {
+						TYPE: {
                             type: ArgumentType.STRING,
-                            menu: 'portMode',
-                            defaultValue: 0
-                        }
+                            menu: 'dht11Type',
+                            defaultValue: 0						
+						}
                     }
                 },
-                {
-                    opcode: 'temperature',
-                    text: formatMessage({
-                        id: 'sensor.temperature',
-                        default: 'Temperature [PORT]',
-                        description: 'get temperature from thermostat sensor at pin #'
-                    }),
-                    blockType: BlockType.REPORTER,
-                    arguments: {
-                        PORT: {
-                            type: ArgumentType.STRING,
-                            menu: 'portMode',
-                            defaultValue: 0
-                        }
-                    }
-                },
-                {
-                    opcode: 'humidity',
-                    text: formatMessage({
-                        id: 'sensor.humidity',
-                        default: 'DH11 Humidity [PORT]',
-                        description: 'get humidity from DHT sensor at pin #'
-                    }),
-                    blockType: BlockType.REPORTER,
-                    arguments: {
-                        PORT: {
-                            type: ArgumentType.STRING,
-                            menu: 'portMode',
-                            defaultValue: 0
-                        }
-                    }
-                },
+                // {
+                //     opcode: 'infraredTrack',
+                //     text: formatMessage({
+                //         id: 'sensor.infraredTrack',
+                //         default: 'IR Reflect [MODE] [PORT]',
+                //         description: 'infrared sensors used to track line'
+                //     }),
+                //     blockType: BlockType.REPORTER,
+                //     arguments: {
+                //         MODE:{
+                //             type: ArgumentType.STRING,
+                //             menu: 'dataType',
+                //             defaultValue: 0
+                //         },
+                //         PORT: {
+                //             type: ArgumentType.STRING,
+                //             menu: 'portMode',
+                //             defaultValue: 0
+                //         }
+                //     }
+                // },
+                // {
+                //     opcode: 'temperature',
+                //     text: formatMessage({
+                //         id: 'sensor.temperature',
+                //         default: 'Temperature [PORT]',
+                //         description: 'get temperature from thermostat sensor at pin #'
+                //     }),
+                //     blockType: BlockType.REPORTER,
+                //     arguments: {
+                //         PORT: {
+                //             type: ArgumentType.STRING,
+                //             menu: 'portMode',
+                //             defaultValue: 0
+                //         }
+                //     }
+                // },
+                // {
+                //     opcode: 'humidity',
+                //     text: formatMessage({
+                //         id: 'sensor.humidity',
+                //         default: 'DH11 Humidity [PORT]',
+                //         description: 'get humidity from DHT sensor at pin #'
+                //     }),
+                //     blockType: BlockType.REPORTER,
+                //     arguments: {
+                //         PORT: {
+                //             type: ArgumentType.STRING,
+                //             menu: 'portMode',
+                //             defaultValue: 0
+                //         }
+                //     }
+                // },
                 {
                     opcode: 'lcdAddress',
                     text: formatMessage({
@@ -309,7 +343,7 @@ class SensorBlocks {
                     arguments: {
                         VALUE: {
                             type: ArgumentType.STRING,
-                            defaultValue: '0x20'
+                            defaultValue: '0x27'
                         }
                     }
                 },
@@ -333,48 +367,48 @@ class SensorBlocks {
 						}
                     }
                 },
-		        {
-                    opcode: 'bmp180',
-                    text: formatMessage({
-                        id: 'sensor.bmp180',
-                        default: 'BMP180 [DATA][OSS]',
-                        description: 'bmp180 sensors'
-                    }),
-                    blockType: BlockType.REPORTER,
-                    arguments: {
-                        DATA: {
-                            type: ArgumentType.STRING,
-                            menu: 'bmpData',
-                            defaultValue: 0
-                        },
-						OSS: {
-                            type: ArgumentType.NUMBER,
-                            menu: 'oss',
-                            defaultValue: 2
-                        }
-                    }
-                },		
-				{
-                    opcode: 'motorSetup',
-                    text: formatMessage({
-                        id: 'sensor.motorSetup',
-						default: 'Motor L [PORTL] Motor R [PORTR]',
-                        description: 'setting up the motor pins'
-                    }),
-                    blockType: BlockType.COMMAND,
-                    arguments: {
-						PORTL:{
-                            type: ArgumentType.STRING,
-                            menu: 'portMode',
-                            defaultValue: 0
-						},
-						PORTR:{
-                            type: ArgumentType.STRING,
-                            menu: 'portMode',
-                            defaultValue: 1
-						}
-                    }					
-				},
+		        // {
+                //     opcode: 'bmp180',
+                //     text: formatMessage({
+                //         id: 'sensor.bmp180',
+                //         default: 'BMP180 [DATA][OSS]',
+                //         description: 'bmp180 sensors'
+                //     }),
+                //     blockType: BlockType.REPORTER,
+                //     arguments: {
+                //         DATA: {
+                //             type: ArgumentType.STRING,
+                //             menu: 'bmpData',
+                //             defaultValue: 0
+                //         },
+				// 		OSS: {
+                //             type: ArgumentType.NUMBER,
+                //             menu: 'oss',
+                //             defaultValue: 2
+                //         }
+                //     }
+                // },		
+				// {
+                //     opcode: 'motorSetup',
+                //     text: formatMessage({
+                //         id: 'sensor.motorSetup',
+				// 		default: 'Motor L [PORTL] Motor R [PORTR]',
+                //         description: 'setting up the motor pins'
+                //     }),
+                //     blockType: BlockType.COMMAND,
+                //     arguments: {
+				// 		PORTL:{
+                //             type: ArgumentType.STRING,
+                //             menu: 'portMode',
+                //             defaultValue: 0
+				// 		},
+				// 		PORTR:{
+                //             type: ArgumentType.STRING,
+                //             menu: 'portMode',
+                //             defaultValue: 1
+				// 		}
+                //     }					
+				// },
 				{
                     opcode: 'motorControl',
                     text: formatMessage({
@@ -424,7 +458,8 @@ class SensorBlocks {
 				oss: this._buildMenu(OSS),
 				bmpData: this._buildMenu(BMP_DATA),
 				lcdLine: this._buildMenu(LCD_LINE),
-                digitalPin: this._buildMenu(DIGITAL_PIN)
+                digitalPin: this._buildMenu(DIGITAL_PIN),
+                dht11Type: this._buildMenu(DHT11_TYPE)
             },
 
 
@@ -457,7 +492,10 @@ class SensorBlocks {
     }
 	ultrasonicDistance2W(args) {
 		return [String(args.TRIG), String(args.ECHO)];
-	}
+    }
+    dht11(args) {
+        return [args.PIN, String(args.TYPE)];
+    }
     infraredTrack(args){
         return String(args.PORT);
     }

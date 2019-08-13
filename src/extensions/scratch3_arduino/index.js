@@ -649,31 +649,31 @@ class Scratch3ArduinoBlocks {
                     }),
                     arguments: { }
                 },
-                {
-                    opcode: 'variable_create',
-                    text: formatMessage({
-                        id: 'arduino.variable_create',
-                        default: 'Create[TYPE][NAME] as [VALUE]',
-                        description: 'set pin mode'
-                    }),
-                    blockType: BlockType.COMMAND,
-                    arguments: {
-                        TYPE: {
-                            type: ArgumentType.STRING,
-                            menu: 'varType',
-                            defaultValue: 0
-                        },
-                        NAME: {
-                            type: ArgumentType.STRING,
-                            defaultValue: 'Name'
+                // {
+                //     opcode: 'variable_create',
+                //     text: formatMessage({
+                //         id: 'arduino.variable_create',
+                //         default: 'Create[TYPE][NAME] as [VALUE]',
+                //         description: 'set pin mode'
+                //     }),
+                //     blockType: BlockType.COMMAND,
+                //     arguments: {
+                //         TYPE: {
+                //             type: ArgumentType.STRING,
+                //             menu: 'varType',
+                //             defaultValue: 0
+                //         },
+                //         NAME: {
+                //             type: ArgumentType.STRING,
+                //             defaultValue: 'Name'
 
-                        },
-                        VALUE: {
-                            type: ArgumentType.STRING,
-                            defaultValue: ''
-                        }
-                    }
-                },
+                //         },
+                //         VALUE: {
+                //             type: ArgumentType.STRING,
+                //             defaultValue: ''
+                //         }
+                //     }
+                // },
                 {
                     opcode: 'pin_mode',
                     text: formatMessage({

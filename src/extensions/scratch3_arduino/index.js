@@ -162,6 +162,72 @@ const DIGITAL_PIN = [
     }
 ];
 
+const ANALOG_PIN = [
+    {
+        name: 'A0',
+        id: 'arduino.pin.A0',
+        value: 14
+    },
+    {
+        name: 'A1',
+        id: 'arduino.pin.A1',
+        value: 15
+    },
+    {
+        name: 'A2',
+        id: 'arduino.pin.A2',
+        value: 16
+    },
+    {
+        name: 'A3',
+        id: 'arduino.pin.A3',
+        value: 17
+    },
+    {
+        name: 'A4',
+        id: 'arduino.pin.A4',
+        value: 18
+    },
+    {
+        name: 'A5',
+        id: 'arduino.pin.A5',
+        value: 19
+    }
+];
+
+const PWM_PIN = [
+    {
+        name: '3',
+        id: 'arduino.pin.3',
+        value: 3
+    },
+    {
+        name: '5',
+        id: 'arduino.pin.5',
+        value: 5
+    },
+    {
+        name: '6',
+        id: 'arduino.pin.6',
+        value: 6
+    },
+    {
+        name: '9',
+        id: 'arduino.pin.9',
+        value: 9
+    },
+    {
+        name: '10',
+        id: 'arduino.pin.10',
+        value: 10
+    },
+    {
+        name: '11',
+        id: 'arduino.pin.11',
+        value: 11
+    }
+];
+
 const VALID_PIN_MODE = [0, 1, 2, 3, 4];
 
 /**
@@ -232,7 +298,18 @@ const Baudrate = [
 
 const VALID_PIN_LEVEL = [0, 1];
 
-const NEW_LINE = [{name: 'WRAP', value: 'Serial.println'}, {name: 'NO WRAP', value: 'Serial.print'}];
+const NEW_LINE = [
+    {
+        name: 'WRAP',
+        id: 'arduino.warp',
+        value: 0
+    },
+    {
+        name: 'NO WRAP',
+        id: 'arduino.nowarp',
+        value: 1
+    }
+];
 
 class Arduino {
 
@@ -699,7 +776,7 @@ class Scratch3ArduinoBlocks {
                     opcode: 'serial_begin',
                     text: formatMessage({
                         id: 'arduino.serial_begin',
-                        default: 'Serial Begin [Baud]',
+                        default: 'Set Serial-port baud rate to [Baud]',
                         description: 'set serial connection'
                     }),
                     blockType: BlockType.COMMAND,
@@ -715,7 +792,7 @@ class Scratch3ArduinoBlocks {
                     opcode: 'serial_print',
                     text: formatMessage({
                         id: 'arduino.serial_print',
-                        default: 'Serial Print [VALUE] [NL]',
+                        default: 'Serial output [VALUE] and [NL]',
                         description: 'serial print data'
                     }),
                     blockType: BlockType.COMMAND,
@@ -727,7 +804,7 @@ class Scratch3ArduinoBlocks {
                         NL: {
                             type: ArgumentType.STRING,
                             menu: 'newLine',
-                            defaultValue: 'WRAP'
+                            defaultValue: 0
                         }
                     }
                 },
@@ -742,7 +819,8 @@ class Scratch3ArduinoBlocks {
                     arguments: {
                         PIN: {
                             type: ArgumentType.NUMBER,
-                            defaultValue: 11
+                            menu: 'digitalPin',
+                            defaultValue: 0
                         },
                         LEVEL: {
                             type: ArgumentType.STRING,
@@ -766,29 +844,30 @@ class Scratch3ArduinoBlocks {
                         },
                         PIN: {
                             type: ArgumentType.NUMBER,
-                            defaultValue: 11
+                            menu: 'pwmPin',
+                            defaultValue: 3
                         }
                     }
                 },
-                {
-                    opcode: 'servo_write',
-                    text: formatMessage({
-                        id: 'arduino.servo_write',
-                        default: 'Servo Write [PIN] Degree [DEGREE]',
-                        description: 'Servo write pin'
-                    }),
-                    blockType: BlockType.COMMAND,
-                    arguments: {
-                        DEGREE: {
-                            type: ArgumentType.NUMBER,
-                            defaultValue: 180
-                        },
-                        PIN: {
-                            type: ArgumentType.NUMBER,
-                            defaultValue: 11
-                        }
-                    }
-                },
+                // {
+                //     opcode: 'servo_write',
+                //     text: formatMessage({
+                //         id: 'arduino.servo_write',
+                //         default: 'Servo Write [PIN] Degree [DEGREE]',
+                //         description: 'Servo write pin'
+                //     }),
+                //     blockType: BlockType.COMMAND,
+                //     arguments: {
+                //         DEGREE: {
+                //             type: ArgumentType.NUMBER,
+                //             defaultValue: 180
+                //         },
+                //         PIN: {
+                //             type: ArgumentType.NUMBER,
+                //             defaultValue: 11
+                //         }
+                //     }
+                // },
                 {
                     opcode: 'digital_read',
                     text: formatMessage({
@@ -800,7 +879,8 @@ class Scratch3ArduinoBlocks {
                     arguments: {
                         PIN: {
                             type: ArgumentType.NUMBER,
-                            defaultValue: 2
+                            menu: 'digitalPin',
+                            defaultValue: 0
                         }
                     }
                 },
@@ -811,10 +891,11 @@ class Scratch3ArduinoBlocks {
                         default: 'Analog Read [PIN]',
                         description: 'Analog Read pin'
                     }),
-                    blockType: BlockType.BOOLEAN,
+                    blockType: BlockType.REPORTER,
                     arguments: {
                         PIN: {
                             type: ArgumentType.NUMBER,
+                            menu: 'analogPin',
                             defaultValue: 0
                         }
                     }
@@ -827,7 +908,9 @@ class Scratch3ArduinoBlocks {
                 varType: this._buildMenu(Variable_Type),
                 baudrate: this._buildMenu(Baudrate),
                 newLine: this._buildMenu(NEW_LINE),
-                digitalPin: this._buildMenu(DIGITAL_PIN)
+                digitalPin: this._buildMenu(DIGITAL_PIN),
+                pwmPin: this._buildMenu(PWM_PIN),
+                analogPin: this._buildMenu(ANALOG_PIN)
             }
         };
     }

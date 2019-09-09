@@ -15,6 +15,43 @@ const DATA_TYPE = [
         value: 1
     }
 ];
+const TIME_TYPE = [
+    {
+        name: 'year',
+        id: 'sensor.timeType.year',
+        value: 0
+    },
+    {
+        name: 'month',
+        id: 'sensor.timeType.month',
+        value: 1
+    },
+    {
+        name: 'date',
+        id: 'sensor.timeType.date',
+        value: 2
+    },
+    {
+        name: 'hour',
+        id: 'sensor.timeType.hour',
+        value: 3
+    },
+    {
+        name: 'minute',
+        id: 'sensor.timeType.minute',
+        value: 4
+    },
+    {
+        name: 'second',
+        id: 'sensor.timeType.second',
+        value: 5
+    },
+    {
+        name: 'day',
+        id: 'sensor.timeType.day',
+        value: 6
+    }
+];
 const MOTOR_DIR = [
     {
         name: 'Forward',
@@ -327,6 +364,83 @@ class SensorBlocks {
                         }
                     }
                 },
+                {
+                    opcode: 'DS1302_setup',
+                    text: formatMessage({
+                        id: 'sensor.DS1302_setup',
+                        default: 'Set DS1302 CLK pin [CLK] DAT pin [DAT] RST pin [RST]',
+                        description: 'DS1302 setup'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        CLK: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
+                        DAT: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
+                        RST: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        }
+                    }
+                },
+                {
+                    opcode: 'DS1302',
+                    text: formatMessage({
+                        id: 'sensor.DS1302',
+                        default: 'Adjust the DS1302 time to [YEAR] Year [MONTH] Month [DATE] Date [HOUR] Hour [MINUTE] Minute [SECOND] Second',
+                        description: 'DS1302'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        YEAR: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 2019
+                        },
+                        MONTH: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 1
+                        },
+                        DATE: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 1
+                        },
+                        HOUR: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 14
+                        },
+                        MINUTE: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        SECOND: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        }
+                    }
+                },
+                {
+                    opcode: 'getDS1302',
+                    text: formatMessage({
+                        id: 'sensor.getDS1302',
+                        default: 'Get DS1302 Time [TYPE]',
+                        description: 'getDS1302'
+                    }),
+                    blockType: BlockType.REPORTER,
+                    arguments: {
+                        TYPE: {
+                            type: ArgumentType.STRING,
+                            menu: 'timeType',
+                            defaultValue: 0
+                        }
+                    }
+                },
                 // {
                 //     opcode: 'infraredTrack',
                 //     text: formatMessage({
@@ -508,7 +622,8 @@ class SensorBlocks {
                 lcdLine: this._buildMenu(LCD_LINE),
                 digitalPin: this._buildMenu(DIGITAL_PIN),
                 analogPin: this._buildMenu(ANALOG_PIN),
-                dht11Type: this._buildMenu(DHT11_TYPE)
+                dht11Type: this._buildMenu(DHT11_TYPE),
+                timeType: this._buildMenu(TIME_TYPE)
             }
 
 
@@ -562,6 +677,15 @@ class SensorBlocks {
     }
     lcdAddress (args) {
         return String(args.VALUE);
+    }
+    DS1302 (args) {
+        return [args.YEAR, args.MONTH, args.DATE, args.HOUR, args.MINUTE, args.SECOND];
+    }
+    DS1302_setup (args) {
+        return [args.CLK, args.DAT, args.RST];
+    }
+    getDS1302 (args) {
+        return [args.TYPE];
     }
     lcdDisplay (args) {
         return String(args.VALUE);

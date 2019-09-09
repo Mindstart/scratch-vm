@@ -1,6 +1,6 @@
-const com = require("firmata/lib/com");
-const five = require("johnny-five");
-const firmata = require("firmata");
+const com = require('firmata/lib/com');
+const five = require('johnny-five');
+const firmata = require('firmata');
 
 let main;
 class ComPort {
@@ -13,7 +13,7 @@ class ComPort {
      * @param {object} connectCallback - a callback for connection.
      * @param {object} messageCallback - a callback for message sending.
      */
-    constructor(runtime, connectCallback) {
+    constructor (runtime, connectCallback) {
 
         this.requestPeripheral(); // only call request device after socket opens
         this.onerror = this._sendError.bind(this, 'ws onerror');
@@ -30,21 +30,22 @@ class ComPort {
      * Request connection to the device.
      * If the web socket is not yet open, request when the socket promise resolves.
      */
-    requestPeripheral() {
+    requestPeripheral () {
         const availablePeripherals = {};
-        com.list(function (err, ports) {
-			console.log("Ports: "+ports);
-            ports.forEach(function(port) {
+        com.list((err, ports) => {
+            console.log('Ports info:');
+            console.info(ports);
+            ports.forEach(port => {
                 port => firmata.isAcceptablePort(port) && port;
-                if (port) {
+                if (port && (port.manufacturer.indexOf('Arduino') !== -1)) {
                     const device = {
-                        name: port.comName,
+                        name: `${port.manufacturer }(${port.comName})`,
                         key: port.comName,
                         peripheralId: port.comName,
                         rssi: port.rssi
                     };
                     availablePeripherals[port.comName] = device;
-                };
+                }
             });
             main._runtime.emit(main._runtime.constructor.PERIPHERAL_LIST_UPDATE, availablePeripherals);
         });
@@ -56,30 +57,30 @@ class ComPort {
      * callback if connection is successful.
      * @param {number} id - the id of the peripheral to connect to
      */
-    connectPeripheral(id) {
-        console.info("enter connectDevice="+ id);
+    connectPeripheral (id) {
+        console.info(`enter connectDevice=${id}`);
         let connected = true;
-        if (typeof board == "undefined") {
+        if (typeof board === 'undefined') {
             connected = false;
             this._io = new firmata(id);
             const board = new five.Board({
                 io: this._io,
                 repl: false
             });
-            board.on("ready", () => {
-                console.log("Arduino board ready " + board);
+            board.on('ready', () => {
+                console.log(`Arduino board ready ${board}`);
                 this._board = board;
                 this._connected = true;
                 this._runtime.emit(this._runtime.constructor.PERIPHERAL_CONNECTED);
                 this._connectCallback();
-                //board.samplingInterval(200);
+                // board.samplingInterval(200);
 
             });
-            board.on("error", () => {
-                console.log("Arduino board error " + board);
+            board.on('error', () => {
+                console.log(`Arduino board error ${board}`);
                 connected = false;
-				board.transport.close();
-				this._runtime.emit(this._runtime.constructor.PERIPHERAL_CONNECTED);
+                board.transport.close();
+                this._runtime.emit(this._runtime.constructor.PERIPHERAL_CONNECTED);
             });
 
         }
@@ -88,10 +89,11 @@ class ComPort {
     /**
      * Close the Comport.
      */
-    disconnect() {
-        console.info("enter disconnectSession ");
-        if (this._board)
+    disconnect () {
+        console.info('enter disconnectSession ');
+        if (this._board) {
             this._board.transport.close();
+        }
         this._connected = true;
         this._runtime.emit(this._runtime.constructor.PERIPHERAL_CONNECTED);
     }
@@ -99,22 +101,22 @@ class ComPort {
     /**
      * @return {bool} whether the peripheral is connected.
      */
-     isConnected() {
-        //console.info("getPeripheralIsConnected=" + this._connected);
+    isConnected () {
+        // console.info("getPeripheralIsConnected=" + this._connected);
         return this._connected;
     }
 
-    getBoard() {
+    getBoard () {
         return this._board;
     }
 
-    _sendError(/* e */) {
+    _sendError (/* e */) {
         this.disconnectSession();
         // log.error(`BTSession error: ${JSON.stringify(e)}`);
         this._runtime.emit(this._runtime.constructor.PERIPHERAL_ERROR);
     }
 
-    _sendDiscoverTimeout() {
+    _sendDiscoverTimeout () {
         this._runtime.emit(this._runtime.constructor.PERIPHERAL_SCAN_TIMEOUT);
     }
 

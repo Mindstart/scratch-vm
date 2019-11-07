@@ -37,7 +37,7 @@ class ComPort {
             console.info(ports);
             ports.forEach(port => {
                 port => firmata.isAcceptablePort(port) && port;
-                if (port && (port.manufacturer.indexOf('Arduino') !== -1)) {
+                if (port && (port.manufacturer.indexOf('Arduino') !== -1 || port.productId !== '0x0')) {
                     const device = {
                         name: `${port.manufacturer }(${port.comName})`,
                         key: port.comName,

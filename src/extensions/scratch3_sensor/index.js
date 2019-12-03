@@ -2,6 +2,7 @@ const ArgumentType = require('../../extension-support/argument-type');
 const BlockType = require('../../extension-support/block-type');
 const TargetType = require('../../extension-support/target-type');
 const formatMessage = require('format-message');
+const Cast = require('../../util/cast');
 
 const DATA_TYPE = [
     {
@@ -529,6 +530,22 @@ class SensorBlocks {
                         }
                     }
                 },
+                {
+                    opcode: 'button',
+                    text: formatMessage({
+                        id: 'sensor.button',
+                        default: 'pin [PIN] button pressed?',
+                        description: 'button pressed'
+                    }),
+                    blockType: BlockType.BOOLEAN,
+                    arguments: {
+                        PIN: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        }
+                    }
+                },
                 // {
                 //     opcode: 'bmp180',
                 //     text: formatMessage({
@@ -689,6 +706,11 @@ class SensorBlocks {
     }
     lcdDisplay (args) {
         return String(args.VALUE);
+    }
+    button (args) {
+        const pin = Cast.toNumber(args.PIN);
+        const data = this._device.digitalRead(pin);
+        return data;
     }
     motorInit () {
         return 'motor initialized';

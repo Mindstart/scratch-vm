@@ -899,8 +899,23 @@ class Scratch3ArduinoBlocks {
                             defaultValue: 0
                         }
                     }
+                },
+                {
+                    opcode: 'systemUptime',
+                    text: formatMessage({
+                        id: 'arduino.systemUptime',
+                        default: 'System uptime(ms)',
+                        description: 'System uptime (ms)'
+                    }),
+                    blockType: BlockType.REPORTER,
+                    arguments: {
+                        PIN: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'analogPin',
+                            defaultValue: 0
+                        }
+                    }
                 }
-
             ],
             menus: {
                 pinMode: this._buildMenu(PIN_MODE),
@@ -1052,6 +1067,9 @@ class Scratch3ArduinoBlocks {
         // console.info("analoglRead data=" + data);
         return data;
 
+    }
+    systemUptime () {
+        return 0;
     }
     whenBrightnessLessThan (args) {
         const brightness = MathUtil.clamp(Cast.toNumber(args.DISTANCE), 0, 100);

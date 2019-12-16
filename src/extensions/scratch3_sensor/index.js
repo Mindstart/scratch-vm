@@ -254,6 +254,34 @@ const DHT11_TYPE = [
 
     }
 ];
+const PIN_LEVEL = [
+    {
+        name: 'low',
+        id: 'sensor.pinLevel.low',
+        value: 0
+    },
+    {
+        name: 'high',
+        id: 'sensor.pinLevel.high',
+        value: 1
+    }
+];
+const SEGMENT_NUM = [
+    {name: '0', value: 0, id: null},
+    {name: '1', value: 1, id: null},
+    {name: '2', value: 2, id: null},
+    {name: '3', value: 3, id: null},
+    {name: '4', value: 4, id: null},
+    {name: '5', value: 5, id: null},
+    {name: '6', value: 6, id: null},
+    {name: '7', value: 7, id: null},
+    {name: '8', value: 8, id: null},
+    {name: '9', value: 9, id: null}
+];
+const BOOL_VAL = [
+    {name: 'false', id: 'sensor.boolFalse', values: 0},
+    {name: 'true', id: 'sensor.boolTrue', values: 1}
+];
 const BMP_DATA = [
     {name: 'temperature', value: 'temperature', id: null},
     {name: 'pressure', value: 'pressure', id: null},
@@ -266,6 +294,107 @@ const OSS = [
     {name: '8 times', value: 3, id: null}
 ];
 const LCD_LINE = [{name: '1', value: 0}, {name: '2', value: 1}];
+
+const SEGMENT1_PIN = [
+    {
+        name: 'A',
+        id: 'sensor.segment.A',
+        value: 0
+    },
+    {
+        name: 'B',
+        id: 'sensor.segment.B',
+        value: 1
+    },
+    {
+        name: 'C',
+        id: 'sensor.segment.C',
+        value: 2
+    },
+    {
+        name: 'D',
+        id: 'sensor.segment.D',
+        value: 3
+    },
+    {
+        name: 'E',
+        id: 'sensor.segment.E',
+        value: 4
+    },
+    {
+        name: 'F',
+        id: 'sensor.segment.F',
+        value: 5
+    },
+    {
+        name: 'G',
+        id: 'sensor.segment.G',
+        value: 6
+    },
+    {
+        name: 'DP',
+        id: 'sensor.segment.DP',
+        value: 7
+    },
+    {
+        name: 'COM',
+        id: 'sensor.segment.COM',
+        value: 8
+    }
+];
+
+const SEGMENT2_PIN = [
+    {
+        name: 'A',
+        id: 'sensor.segment.A',
+        value: 0
+    },
+    {
+        name: 'B',
+        id: 'sensor.segment.B',
+        value: 1
+    },
+    {
+        name: 'C',
+        id: 'sensor.segment.C',
+        value: 2
+    },
+    {
+        name: 'D',
+        id: 'sensor.segment.D',
+        value: 3
+    },
+    {
+        name: 'E',
+        id: 'sensor.segment.E',
+        value: 4
+    },
+    {
+        name: 'F',
+        id: 'sensor.segment.F',
+        value: 5
+    },
+    {
+        name: 'G',
+        id: 'sensor.segment.G',
+        value: 6
+    },
+    {
+        name: 'DP',
+        id: 'sensor.segment.DP',
+        value: 7
+    },
+    {
+        name: 'COM1',
+        id: 'sensor.segment.COM1',
+        value: 8
+    },
+    {
+        name: 'COM2',
+        id: 'sensor.segment.COM2',
+        value: 9
+    }
+];
 
 class SensorBlocks {
     constructor (runtime) {
@@ -546,6 +675,197 @@ class SensorBlocks {
                         }
                     }
                 },
+                {
+                    opcode: 'initOneBitSegment',
+                    text: formatMessage({
+                        id: 'sensor.initOneBitSegment',
+                        default: 'Init 1-bit segment A[PIN_A] B[PIN_B] C[PIN_C] D[PIN_D] E[PIN_E] F[PIN_F] G[PIN_G] DP[PIN_DP] COM[PIN_COM]',
+                        description: '1-bit segment'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        PIN_A: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
+                        PIN_B: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
+                        PIN_C: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
+                        PIN_D: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
+                        PIN_E: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
+                        PIN_F: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
+                        PIN_G: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
+                        PIN_DP: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
+                        PIN_COM: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        }
+                    }
+                },
+                {
+                    opcode: 'oneBitSegment',
+                    text: formatMessage({
+                        id: 'sensor.oneBitSegment',
+                        default: 'Set 1-bit segment [PIN] to [VALUE]',
+                        description: 'set 1-bit segment'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        PIN: {
+                            type: ArgumentType.STRING,
+                            menu: 'segment1Pin',
+                            defaultValue: 0
+                        },
+                        VALUE: {
+                            type: ArgumentType.STRING,
+                            menu: 'pinLevel',
+                            defaultValue: 0
+                        }
+                    }
+                },
+                {
+                    opcode: 'segmentDisplay',
+                    text: formatMessage({
+                        id: 'sensor.segmentDisplay',
+                        default: 'segment display number[NUM]',
+                        description: 'segment display'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        NUM: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'segmentNum',
+                            defaultValue: 0
+                        }
+                    }
+                },
+                {
+                    opcode: 'segmentDisplayDot',
+                    text: formatMessage({
+                        id: 'sensor.segmentDisplayDot',
+                        default: 'segment display dot[BOOLVAL]',
+                        description: 'segment display dot'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        BOOLVAL: {
+                            type: ArgumentType.STRING,
+                            menu: 'boolVal',
+                            defaultValue: 0
+                        }
+                    }
+                },
+                {
+                    opcode: 'initTwoBitSegment',
+                    text: formatMessage({
+                        id: 'sensor.initTwoBitSegment',
+                        default: 'Init 2-bit segment A[PIN_A] B[PIN_B] C[PIN_C] D[PIN_D] E[PIN_E] F[PIN_F] G[PIN_G] DP[PIN_DP] COM1[PIN_COM1] COM2[PIN_COM2]',
+                        description: '2-bit segment'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        PIN_A: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
+                        PIN_B: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
+                        PIN_C: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
+                        PIN_D: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
+                        PIN_E: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
+                        PIN_F: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
+                        PIN_G: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
+                        PIN_DP: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
+                        PIN_COM1: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
+                        PIN_COM2: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        }
+                    }
+                },
+                {
+                    opcode: 'twoBitSegment',
+                    text: formatMessage({
+                        id: 'sensor.twoBitSegment',
+                        default: 'Set 2-bit segment [PIN] to [VALUE]',
+                        description: 'set 2-bit segment'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        PIN: {
+                            type: ArgumentType.STRING,
+                            menu: 'segment2Pin',
+                            defaultValue: 0
+                        },
+                        VALUE: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'pinLevel',
+                            defaultValue: 0
+                        }
+                    }
+                },
                 // {
                 //     opcode: 'bmp180',
                 //     text: formatMessage({
@@ -640,11 +960,29 @@ class SensorBlocks {
                 digitalPin: this._buildMenu(DIGITAL_PIN),
                 analogPin: this._buildMenu(ANALOG_PIN),
                 dht11Type: this._buildMenu(DHT11_TYPE),
-                timeType: this._buildMenu(TIME_TYPE)
+                timeType: this._buildMenu(TIME_TYPE),
+                segment1Pin: this._buildMenu(SEGMENT1_PIN),
+                segment2Pin: this._buildMenu(SEGMENT2_PIN),
+                pinLevel: this._buildMenu(PIN_LEVEL),
+                boolVal: this._buildMenu(BOOL_VAL),
+                segmentNum: this._buildMenu(SEGMENT_NUM)
             }
 
 
         };
+    }
+
+    get SETVALUE () {
+        return [
+            {
+                text: 'low',
+                value: 0
+            },
+            {
+                text: 'high',
+                value: 1
+            }
+        ];
     }
 
     /**
@@ -711,6 +1049,24 @@ class SensorBlocks {
         const pin = Cast.toNumber(args.PIN);
         const data = this._device.digitalRead(pin);
         return data;
+    }
+    initOneBitSegment (args) {
+        return [args.PIN_A, args.PIN_B, args.PIN_C, args.PIN_D, args.PIN_E, args.PIN_F, args.PIN_G, args.PIN_DP, args.PIN_COM];
+    }
+    oneBitSegment (args) {
+        return [String(args.PIN), String(args.VALUE)];
+    }
+    segmentDisplay (args) {
+        return [args.NUM];
+    }
+    segmentDisplayDot (args) {
+        return [args.BOOLVAL];
+    }
+    initTwoBitSegment (args) {
+        return [args.PIN_A, args.PIN_B, args.PIN_C, args.PIN_D, args.PIN_E, args.PIN_F, args.PIN_G, args.PIN_DP, args.PIN_COM1, args.PIN_COM2];
+    }
+    twoBitSegment (args) {
+        return [String(args.PIN), String(args.VALUE)];
     }
     motorInit () {
         return 'motor initialized';

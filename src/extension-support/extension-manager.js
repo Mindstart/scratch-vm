@@ -42,7 +42,9 @@ const builtinExtensions = {
 	arduino: () => require('../extensions/scratch3_arduino'),
     boost: () => require('../extensions/scratch3_boost'),
     gdxfor: () => require('../extensions/scratch3_gdx_for'),
-	sensor: () => require('../extensions/scratch3_sensor')
+	sensor: () => require('../extensions/scratch3_sensor'),
+	display: () => require('../extensions/scratch3_display'),
+	motor: () => require('../extensions/scratch3_motor')
 
 };
 

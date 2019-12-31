@@ -238,62 +238,60 @@ const VALID_PIN_MODE = [0, 1, 2, 3, 4];
  */
 const PIN_LEVEL = [
     {
-	  name: 'low',
-	  id: 'arduino.pinLevel.low',
-	  value: 0
-    },
-    {
-	  name: 'high',
-	  id: 'arduino.pinLevel.high',
-	  value: 1
+        name: 'low',
+        id: 'arduino.pinLevel.low',
+        value: 0
+    }, {
+        name: 'high',
+        id: 'arduino.pinLevel.high',
+        value: 1
     }
 ];
 
 const Variable_Type = [
     {
-	  name: 'Integer',
-	  id: 'arduino.variableType.integer',
-	  value: 'int'
+        name: 'Integer',
+        id: 'arduino.variableType.integer',
+        value: 'int'
     },
     {
-	  name: 'Long',
-	  id: 'arduino.variableType.long',
-	  value: 'long'
+        name: 'Long',
+        id: 'arduino.variableType.long',
+        value: 'long'
     },
     {
-	  name: 'Double',
-	  id: 'arduino.variableType.double',
-	  value: 'double'
+        name: 'Double',
+        id: 'arduino.variableType.double',
+        value: 'double'
     },
     {
-	  name: 'Float',
-	  id: 'arduino.variableType.float',
-	  value: 'float'
+        name: 'Float',
+        id: 'arduino.variableType.float',
+        value: 'float'
     },
     {
-	  name: 'Byte',
-	  id: 'arduino.variableType.byte',
-	  value: 'byte'
+        name: 'Byte',
+        id: 'arduino.variableType.byte',
+        value: 'byte'
     },
     {
-	  name: 'Char',
-	  id: 'arduino.variableType.char',
-	  value: 'char'
+        name: 'Char',
+        id: 'arduino.variableType.char',
+        value: 'char'
     },
     {
-	  name: 'String',
-	  id: 'arduino.variableType.string',
-	  value: 'String'
+        name: 'String',
+        id: 'arduino.variableType.string',
+        value: 'String'
     }
 ];
 
 const Baudrate = [
-    {name: '9600', value: 9600, id: null},
-    {name: '19200', value: 19200, id: null},
-    {name: '38400', value: 38400, id: null},
-    {name: '57600', value: 57600, id: null},
-    {name: '115200', value: 115200, id: null}
-
+    {name: '9600', value: 9600, id: 'arduino.baudrate.9600'},
+    {name: '19200', value: 19200, id: 'arduino.baudrate.19200'},
+    {name: '38400', value: 38400, id: 'arduino.baudrate.38400'},
+    {name: '57600', value: 57600, id: 'arduino.baudrate.57600'},
+    {name: '115200', value: 115200, id: 'arduino.baudrate.115200'}
 ];
 
 const VALID_PIN_LEVEL = [0, 1];

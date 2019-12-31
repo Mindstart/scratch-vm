@@ -396,6 +396,34 @@ const SEGMENT2_PIN = [
     }
 ];
 
+const ROBO_RAVE_TASK_TYPE = [
+    {name: 'Basic', id: 'sensor.roboRaveTaskType.basic', values: 0},
+    {name: 'Pro', id: 'sensor.roboRaveTaskType.pro', values: 1}
+];
+
+const DIRECTION = [
+    {name: 'Left', id: 'sensor.direction.left', values: 0},
+    {name: 'Right', id: 'sensor.direction.right', values: 1}
+];
+
+const VECTOR_TYPE = [
+    {name: 'Found The Vector', id: 'sensor.vectorType.foundTheVector', values: 0},
+    {name: 'Error Or Nothing Detected', id: 'sensor.vectorType.errorOrNothingDetected', values: 1},
+    {name: 'Arrow Pointing Up', id: 'sensor.vectorType.arrowPointingUp', values: 2},
+    {name: 'Intersection Is Present', id: 'sensor.vectorType.intersectionIsPresent', values: 3},
+    {name: 'Found Intersection', id: 'sensor.vectorType.foundIntersection', values: 4}
+];
+
+const PIXY2_COMMAND = [
+    {name: 'Refresh Data In Tracking Mode', id: 'sensor.pixy2Command.refreshData', value: 0},
+    {name: 'Calculate Heading Error With Respect To m_x1', id: 'sensor.pixy2Command.calcHeadingErrorPixy2', value: 1},
+    {name: 'Perform PID Calcs On Heading Error', id: 'sensor.pixy2Command.performPIDCalcHeadingError', value: 2},
+    {name: 'Separate Heading Into Wheel Velocities', id: 'sensor.pixy2Command.separateHeadingIntoWheelVelocities', value: 3},
+    {name: 'Slow Down', id: 'sensor.pixy2Command.slowDown', value: 4},
+    {name: 'Boost', id: 'sensor.pixy2Command.boost', value: 5},
+    {name: 'Reverse Vector', id: 'sensor.pixy2Command.reverseVector', value: 6}
+];
+
 class SensorBlocks {
     constructor (runtime) {
         /**
@@ -945,7 +973,144 @@ class SensorBlocks {
                         description: 'motor Stop'
                     }),
                     blockType: BlockType.COMMAND
-
+                },
+                {
+                    opcode: 'setServoDegree',
+                    text: formatMessage({
+                        id: 'sensor.setServoDegree',
+                        default: 'Set Pin [PIN] Servo To [DEGREE] Degree',
+                        description: 'Set Pin Servo To Degree'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        PIN: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
+                        DEGREE: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 90
+                        }
+                    }
+                },
+                {
+                    opcode: 'initPixy2',
+                    text: formatMessage({
+                        id: 'sensor.initPixy2',
+                        default: 'Init Pixy2 Slow Speed [SLOW] Fast Speed [FAST]',
+                        description: 'init pixy2'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        SLOW: {
+                            type: ArgumentType.STRING,
+                            defaultValue: '150'
+                        },
+                        FAST: {
+                            type: ArgumentType.STRING,
+                            defaultValue: '300'
+                        }                        
+                    }
+                },
+                {
+                    opcode: 'setRoboRaveTaskType',
+                    text: formatMessage({
+                        id: 'sensor.setPixy2TaskType',
+                        default: 'Set RoboRave Task Type[TASK_TYPE]',
+                        description: 'set roboRave task type'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        TASK_TYPE: {
+                            type: ArgumentType.STRING,
+                            menu: 'roboRaveTaskType',
+                            defaultValue: 0
+                        }
+                    }
+                },
+                {
+                    opcode: 'setMotorSpeedBasedOnPixy2',
+                    text: formatMessage({
+                        id: 'sensor.setMotorSpeedBasedOnPixy2',
+                        default: 'Set [DIRECTION] Motor Speed [SPEED] Based On Pixy2',
+                        description: 'set motor speed based on pixy2'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        DIRECTION: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'direction',
+                            defaultValue: 0
+                        },
+                        SPEED: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 100
+                        }
+                    }
+                },
+                {
+                    opcode: 'refreshDataInTrackingModeFromPixy2',
+                    text: formatMessage({
+                        id: 'sensor.refreshDataInTrackingModeFromPixy2',
+                        default: 'Pixy2 [PIXY2_COMMAND]',
+                        description: 'refresh data in tracking mode from pixy2'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        PIXY2_COMMAND: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'pixy2Command',
+                            defaultValue: 0
+                        }
+                    }
+                },
+                {
+                    opcode: 'pixy2FoundTheVector',
+                    text: formatMessage({
+                        id: 'sensor.pixy2FoundTheVector',
+                        default: 'Pixy2 [FOUND_VECTOR]?',
+                        description: 'pixy2 found the vector'
+                    }),
+                    blockType: BlockType.BOOLEAN,
+                    arguments: {
+                        FOUND_VECTOR: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'vectorType',
+                            defaultValue: 0
+                        }
+                    }
+                },
+                {
+                    opcode: 'pixy2SetPowerRate',
+                    text: formatMessage({
+                        id: 'sensor.pixy2SetPowerRate',
+                        default: 'Pixy2 Set Power Rate [RATE]',
+                        description: 'pixy2 set power rate'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        RATE: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0.5
+                        }
+                    }
+                },
+                {
+                    opcode: 'getLeftOrRightSpeed',
+                    text: formatMessage({
+                        id: 'sensor.getLeftOrRightSpeed',
+                        default: 'Get [DIRECTION] wheel Speed',
+                        description: 'get left or right wheel speed'
+                    }),
+                    blockType: BlockType.REPORTER,
+                    arguments: {
+                        DIRECTION: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'direction',
+                            defaultValue: 0
+                        }
+                    }
                 }
             ],
 
@@ -965,10 +1130,12 @@ class SensorBlocks {
                 segment2Pin: this._buildMenu(SEGMENT2_PIN),
                 pinLevel: this._buildMenu(PIN_LEVEL),
                 boolVal: this._buildMenu(BOOL_VAL),
-                segmentNum: this._buildMenu(SEGMENT_NUM)
+                segmentNum: this._buildMenu(SEGMENT_NUM),
+                roboRaveTaskType: this._buildMenu(ROBO_RAVE_TASK_TYPE),
+                direction: this._buildMenu(DIRECTION),
+                vectorType: this._buildMenu(VECTOR_TYPE),
+                pixy2Command: this._buildMenu(PIXY2_COMMAND)
             }
-
-
         };
     }
 
@@ -1079,6 +1246,30 @@ class SensorBlocks {
     }
     motorControl (args) {
         return [args.DIRL, args.POWERL, args.DIRR, args.POWERR];
+    }
+    initPixy2 (args) {
+        return [args.SLOW, args.FAST];
+    }
+    setRoboRaveTaskType (args) {
+        return [String(args.TASK_TYPE)];
+    }
+    setMotorSpeedBasedOnPixy2 (args) {
+        return [args.DIRECTION, args.SPEED];
+    }
+    refreshDataInTrackingModeFromPixy2 (args) {
+        return [args.PIXY2_COMMAND];
+    }
+    pixy2FoundTheVector (args) {
+        return [args.FOUND_VECTOR];
+    }
+    setServoDegree (args) {
+        return [args.PIN, args.DEGREE];
+    }
+    getLeftOrRightSpeed (args) {
+        return [args.DIRECTION];
+    }
+    pixy2SetPowerRate (args) {
+        return [args.RATE];
     }
 }
 

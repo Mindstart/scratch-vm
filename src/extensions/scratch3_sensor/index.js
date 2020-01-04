@@ -416,12 +416,10 @@ const VECTOR_TYPE = [
 
 const PIXY2_COMMAND = [
     {name: 'Refresh Data In Tracking Mode', id: 'sensor.pixy2Command.refreshData', value: 0},
-    {name: 'Calculate Heading Error With Respect To m_x1', id: 'sensor.pixy2Command.calcHeadingErrorPixy2', value: 1},
-    {name: 'Perform PID Calcs On Heading Error', id: 'sensor.pixy2Command.performPIDCalcHeadingError', value: 2},
-    {name: 'Separate Heading Into Wheel Velocities', id: 'sensor.pixy2Command.separateHeadingIntoWheelVelocities', value: 3},
-    {name: 'Slow Down', id: 'sensor.pixy2Command.slowDown', value: 4},
-    {name: 'Boost', id: 'sensor.pixy2Command.boost', value: 5},
-    {name: 'Reverse Vector', id: 'sensor.pixy2Command.reverseVector', value: 6}
+    {name: 'Calculate Left And Right Wheel Speed', id: 'sensor.pixy2Command.calcHeadingErrorPixy2', value: 1},
+    {name: 'Slow Down', id: 'sensor.pixy2Command.slowDown', value: 2},
+    {name: 'Boost', id: 'sensor.pixy2Command.boost', value: 3},
+    {name: 'Reverse Vector', id: 'sensor.pixy2Command.reverseVector', value: 4}
 ];
 
 class SensorBlocks {
@@ -769,17 +767,16 @@ class SensorBlocks {
                     opcode: 'setMotorSpeedBasedOnPixy2',
                     text: formatMessage({
                         id: 'sensor.setMotorSpeedBasedOnPixy2',
-                        default: 'Set [DIRECTION] Motor Speed [SPEED] Based On Pixy2',
+                        default: 'Set Left Motor Speed [LEFT_SPEED], Right Motor Speed [RIGHT_SPEED] Based On Pixy2',
                         description: 'set motor speed based on pixy2'
                     }),
                     blockType: BlockType.COMMAND,
                     arguments: {
-                        DIRECTION: {
+                        LEFT_SPEED: {
                             type: ArgumentType.NUMBER,
-                            menu: 'direction',
-                            defaultValue: 0
+                            defaultValue: 100
                         },
-                        SPEED: {
+                        RIGHT_SPEED: {
                             type: ArgumentType.NUMBER,
                             defaultValue: 100
                         }
@@ -960,7 +957,7 @@ class SensorBlocks {
         return [String(args.TASK_TYPE)];
     }
     setMotorSpeedBasedOnPixy2 (args) {
-        return [args.DIRECTION, args.SPEED];
+        return [args.LEFT_SPEED, args.RIGHT_SPEED];
     }
     refreshDataInTrackingModeFromPixy2 (args) {
         return [args.PIXY2_COMMAND];

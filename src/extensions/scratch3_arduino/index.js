@@ -312,7 +312,7 @@ const NEW_LINE = [
 class Arduino {
 
     constructor (runtime, extensionId) {
-        // console.info("enter Arduino constructor");
+        console.info("enter Arduino constructor");
 
         /**
          * The Scratch 3.0 runtime used to trigger the green flag button.
@@ -347,6 +347,7 @@ class Arduino {
         console.info('Start startDeviceScan');
         this._bt = new ComPort(this._runtime, this._onSessionConnect.bind(this));
         console.info('End DeviceScan comport=' + this._bt.isConnected());
+        console.log(this._bt);
     }
 
 

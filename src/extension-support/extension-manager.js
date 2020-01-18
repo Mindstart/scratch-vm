@@ -39,12 +39,12 @@ const builtinExtensions = {
     speech2text: () => require('../extensions/scratch3_speech2text'),
     ev3: () => require('../extensions/scratch3_ev3'),
     makeymakey: () => require('../extensions/scratch3_makeymakey'),
-	arduino: () => require('../extensions/scratch3_arduino'),
+    arduino: () => require('../extensions/scratch3_arduino'),
     boost: () => require('../extensions/scratch3_boost'),
     gdxfor: () => require('../extensions/scratch3_gdx_for'),
-	sensor: () => require('../extensions/scratch3_sensor'),
-	display: () => require('../extensions/scratch3_display'),
-	motor: () => require('../extensions/scratch3_motor')
+    sensor: () => require('../extensions/scratch3_sensor'),
+    display: () => require('../extensions/scratch3_display'),
+    motor: () => require('../extensions/scratch3_motor')
 
 };
 

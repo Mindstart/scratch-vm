@@ -1,6 +1,12 @@
 const com = require('firmata/lib/com');
 const five = require('johnny-five');
 const firmata = require('firmata');
+const schedule = require('node-schedule');
+const rule = new schedule.RecurrenceRule();
+rule.second = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 59];
+let j;
+let comName;
+let connected = false;
 
 let main;
 class ComPort {
@@ -14,7 +20,6 @@ class ComPort {
      * @param {object} messageCallback - a callback for message sending.
      */
     constructor (runtime, connectCallback) {
-
         this.requestPeripheral(); // only call request device after socket opens
         this.onerror = this._sendError.bind(this, 'ws onerror');
         this.onclose = this._sendError.bind(this, 'ws onclose');
@@ -22,8 +27,9 @@ class ComPort {
         this._connected = false;
         this._discoverTimeoutID = null;
         this._runtime = runtime;
+        this._board = null;
         main = this;
-
+        this.scheduleJob();
     }
 
     /**
@@ -37,9 +43,9 @@ class ComPort {
             console.info(ports);
             ports.forEach(port => {
                 port => firmata.isAcceptablePort(port) && port;
-                if (port && (port.manufacturer.indexOf('Arduino') !== -1 || port.productId !== '0x0')) {
+                if (port && port.manufacturer && (port.manufacturer.indexOf('Arduino') !== -1 || port.productId !== '0x0')) {
                     const device = {
-                        name: `${port.manufacturer }(${port.comName})`,
+                        name: `${port.manufacturer}(${port.comName})`,
                         key: port.comName,
                         peripheralId: port.comName,
                         rssi: port.rssi
@@ -58,8 +64,10 @@ class ComPort {
      * @param {number} id - the id of the peripheral to connect to
      */
     connectPeripheral (id) {
-        console.info(`enter connectDevice=${id}`);
-        let connected = true;
+        console.info(`enter connectDevice=`);
+        console.info(id);
+        comName = id;
+        connected = true;
         if (typeof board === 'undefined') {
             connected = false;
             this._io = new firmata(id);
@@ -68,21 +76,49 @@ class ComPort {
                 repl: false
             });
             board.on('ready', () => {
-                console.log(`Arduino board ready ${board}`);
+                console.log(`Arduino board ready`);
+                console.log(board);
                 this._board = board;
                 this._connected = true;
                 this._runtime.emit(this._runtime.constructor.PERIPHERAL_CONNECTED);
                 this._connectCallback();
                 // board.samplingInterval(200);
-
             });
             board.on('error', () => {
-                console.log(`Arduino board error ${board}`);
+                console.log(`Arduino board error`);
+                console.log(board);
                 connected = false;
                 board.transport.close();
                 this._runtime.emit(this._runtime.constructor.PERIPHERAL_CONNECTED);
             });
+        }
+    }
 
+    scheduleJob () {
+        if (!j) {
+            j = schedule.scheduleJob(rule, () => {
+                console.log('The answer to life, the universe, and everything!');
+                const availablePeripherals = {};
+                com.list((err, ports) => {
+                    console.log('Ports info:');
+                    console.info(ports);
+                    console.log(this.getBoard());
+                    let reconnect = false;
+                    ports.forEach(port => {
+                        port => firmata.isAcceptablePort(port) && port;
+                        if (port && port.manufacturer && (port.manufacturer.indexOf('Arduino') !== -1 || port.productId !== '0x0')) {
+                            if (port.comName === comName) {
+                                console.log('Here I am!');
+                                reconnect = true;
+                            }
+                        }
+                    });
+                    if (!reconnect) {
+                        this._connected = false;
+                        main._runtime.emit(main._runtime.constructor.PERIPHERAL_LIST_UPDATE, availablePeripherals);
+                    }
+                });
+            });
         }
     }
 
@@ -91,6 +127,7 @@ class ComPort {
      */
     disconnect () {
         console.info('enter disconnectSession ');
+        console.log(this._board);
         if (this._board) {
             this._board.transport.close();
         }

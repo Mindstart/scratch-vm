@@ -29,7 +29,7 @@ class ComPort {
         this._runtime = runtime;
         this._board = null;
         main = this;
-        this.scheduleJob();
+        // this.scheduleJob();
     }
 
     /**

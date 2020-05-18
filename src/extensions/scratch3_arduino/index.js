@@ -16,15 +16,17 @@ let lastValue;
 const digitalPinArray = new Array();
 
 // digitalArray 0:ultrasonic-distance 1:temperature 2-13:pin2-pin13 14-19:A0-A5 20-21:color-reflect
-const digitalArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];// 0:ultrasonic distance 1:
-let motorA; let motorB;
+const digitalArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // 0:ultrasonic distance 1:
+let motorA;
+let motorB;
 let motor_init = 0;
 let lcd_init = 0;
 let lcd;
 let poll = 0;
 let startRun = 0;
 let ultrasonic = 0;
-let readDigitalFlag = 0; let readDigitalTime = 0;
+let readDigitalFlag = 0;
+let readDigitalTime = 0;
 let main;
 let displaycount = 0;
 const BLEUUID = {
@@ -46,21 +48,19 @@ const blockIconURI = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFwAAACACAIA
  * High-level primitives / constants used by the extension.
  * @type {object}
  */
-const PIN_MODE = [
-    {
-	  name: 'Input',
-	  id: 'arduino.pinMode.Input',
-	  value: 0
+const PIN_MODE = [{
+        name: 'Input',
+        id: 'arduino.pinMode.Input',
+        value: 0
     },
     {
-	  name: 'Output',
-	  id: 'arduino.pinMode.Output',
-	  value: 1
+        name: 'Output',
+        id: 'arduino.pinMode.Output',
+        value: 1
     }
 ];
 
-const DIGITAL_PIN = [
-    {
+const DIGITAL_PIN = [{
         name: '0',
         id: 'arduino.pin.0',
         value: 0
@@ -162,8 +162,7 @@ const DIGITAL_PIN = [
     }
 ];
 
-const ANALOG_PIN = [
-    {
+const ANALOG_PIN = [{
         name: 'A0',
         id: 'arduino.pin.A0',
         value: 14
@@ -195,8 +194,7 @@ const ANALOG_PIN = [
     }
 ];
 
-const PWM_PIN = [
-    {
+const PWM_PIN = [{
         name: '3',
         id: 'arduino.pin.3',
         value: 3
@@ -236,20 +234,17 @@ const VALID_PIN_MODE = [0, 1, 2, 3, 4];
  *       the Arduino hub.
  * @type {array}
  */
-const PIN_LEVEL = [
-    {
-        name: 'low',
-        id: 'arduino.pinLevel.low',
-        value: 0
-    }, {
-        name: 'high',
-        id: 'arduino.pinLevel.high',
-        value: 1
-    }
-];
+const PIN_LEVEL = [{
+    name: 'low',
+    id: 'arduino.pinLevel.low',
+    value: 0
+}, {
+    name: 'high',
+    id: 'arduino.pinLevel.high',
+    value: 1
+}];
 
-const Variable_Type = [
-    {
+const Variable_Type = [{
         name: 'Integer',
         id: 'arduino.variableType.integer',
         value: 'int'
@@ -286,18 +281,36 @@ const Variable_Type = [
     }
 ];
 
-const Baudrate = [
-    {name: '9600', value: 9600, id: 'arduino.baudrate.9600'},
-    {name: '19200', value: 19200, id: 'arduino.baudrate.19200'},
-    {name: '38400', value: 38400, id: 'arduino.baudrate.38400'},
-    {name: '57600', value: 57600, id: 'arduino.baudrate.57600'},
-    {name: '115200', value: 115200, id: 'arduino.baudrate.115200'}
+const Baudrate = [{
+        name: '9600',
+        value: 9600,
+        id: 'arduino.baudrate.9600'
+    },
+    {
+        name: '19200',
+        value: 19200,
+        id: 'arduino.baudrate.19200'
+    },
+    {
+        name: '38400',
+        value: 38400,
+        id: 'arduino.baudrate.38400'
+    },
+    {
+        name: '57600',
+        value: 57600,
+        id: 'arduino.baudrate.57600'
+    },
+    {
+        name: '115200',
+        value: 115200,
+        id: 'arduino.baudrate.115200'
+    }
 ];
 
 const VALID_PIN_LEVEL = [0, 1];
 
-const NEW_LINE = [
-    {
+const NEW_LINE = [{
         name: 'WRAP',
         id: 'arduino.warp',
         value: 0
@@ -311,7 +324,7 @@ const NEW_LINE = [
 
 class Arduino {
 
-    constructor (runtime, extensionId) {
+    constructor(runtime, extensionId) {
         console.info("enter Arduino constructor");
 
         /**
@@ -343,7 +356,7 @@ class Arduino {
     /**
      * Called by the runtime when user wants to scan for a device.
      */
-    scan () {
+    scan() {
         console.info('Start startDeviceScan');
         this._bt = new ComPort(this._runtime, this._onSessionConnect.bind(this));
         console.info('End DeviceScan comport=' + this._bt.isConnected());
@@ -356,12 +369,13 @@ class Arduino {
      * Called by the runtime when user wants to connect to a certain device.
      * @param {number} id - the id of the device to connect to.
      */
-    connect (id) {
+    connect(id) {
         global.port_connect = id;
-        console.info(`enter Arduino connectDevice=${  id}`);
+        console.info(`enter Arduino connectDevice=${id}`);
         motor_init = 0;
-        // if (!this._bt)
         this.scan();
+        console.log('this._bt');
+        console.log(this._bt);
         if (this._bt) {
             this._bt.connectPeripheral(id);
         }
@@ -372,7 +386,7 @@ class Arduino {
     /**
      * Called by the runtime when user wants to disconnect from the device.
      */
-    disconnect () {
+    disconnect() {
         this._bt.disconnect();
         window.clearInterval(this._pollingIntervalID); // TODO: window?
         this._pollingIntervalID = null;
@@ -384,7 +398,7 @@ class Arduino {
      * Called by the runtime to detect whether the device is connected.
      * @return {boolean} - the connected state.
      */
-    isConnected () {
+    isConnected() {
         let connected = false;
         if (this._bt) {
             connected = this._bt.isConnected();
@@ -392,7 +406,7 @@ class Arduino {
         return connected;
 
     }
-    setPinMode (pin, mode) {
+    setPinMode(pin, mode) {
         if (!this._bt.isConnected()) return;
         // console.info('setPinMode(' + pin + "," + mode + ")");
         board = this._bt.getBoard();
@@ -400,7 +414,7 @@ class Arduino {
         this.sleepus(70000);
     }
 
-    digitalwrite (pin, level) {
+    digitalwrite(pin, level) {
         if (!this._bt.isConnected()) return;
         // console.info('digitalWrite(' + pin + "," + level + ")");
         board = this._bt.getBoard();
@@ -408,11 +422,11 @@ class Arduino {
         this.sleepus(1200);
     }
 
-    analogWrite (pin, value) {
+    analogWrite(pin, value) {
         if (!this._bt.isConnected()) return;
         // console.info('analogWrite(' + pin + "," + value + ")");
         board = this._bt.getBoard();
-        if(board === undefined) {
+        if (board === undefined) {
             console.log('err: board is undefined');
             return;
         }
@@ -420,7 +434,7 @@ class Arduino {
         this.sleepus(1200);
     }
 
-    servoWrite (pin, degree) {
+    servoWrite(pin, degree) {
         if (!this._bt.isConnected()) return;
         console.info(`servoWrite(${  pin  },${  value  })`);
         board = this._bt.getBoard();
@@ -428,12 +442,12 @@ class Arduino {
         this.sleepus(2000);
     }
 
-    digitalRead (pin) {
+    digitalRead(pin) {
         const value = digitalArray[pin];
         return value;
     }
 
-    lcdDisplay (value) {
+    lcdDisplay(value) {
         if (typeof value !== 'undefined') {
             console.info('lastValue=' + lastValue + ' ' + value);
             if (lcd_init == 0) {
@@ -462,7 +476,7 @@ class Arduino {
         }
     }
 
-    sleepus (usDelay) {
+    sleepus(usDelay) {
         let startTime = process.hrtime();
         let deltaTime;
         let usWaited = 0;
@@ -472,7 +486,7 @@ class Arduino {
         }
     }
 
-    motorInit () {
+    motorInit() {
         console.info('enter motorInit');
 
         this.setPinMode(8, 1);
@@ -484,7 +498,7 @@ class Arduino {
         return;
     }
 
-    motorStop () {
+    motorStop() {
         this.analogWrite(10, 0);
         this.analogWrite(9, 0);
     }
@@ -493,7 +507,7 @@ class Arduino {
     // PRIVATE
     // *******
 
-    _stopAll () {
+    _stopAll() {
         console.info('enter _stopAll');
         startRun = 0;
         poll = 0;
@@ -509,7 +523,7 @@ class Arduino {
         }
     }
 
-    _stopRun () {
+    _stopRun() {
         console.info('enter _stopRun');
         startRun = 0;
         poll = 0;
@@ -524,7 +538,7 @@ class Arduino {
             console.info('remove pin=' + pin);
         }
     }
-    _startRun () {
+    _startRun() {
         console.info('enter _startRun');
         poll = 0;
         ultrasonic = 0;
@@ -535,13 +549,13 @@ class Arduino {
         startRun = 1;
 
     }
-    _stopAllMotors () {
+    _stopAllMotors() {
         this.analogWrite(10, 0);
         this.analogWrite(9, 0);
     }
 
     // TODO: keep here? / refactor
-    _applyPrefix (n, cmd) {
+    _applyPrefix(n, cmd) {
         // TODO: document
         const len = cmd.length + 5;
         return [].concat(
@@ -558,20 +572,20 @@ class Arduino {
 
 
     // TODO: keep here? / refactor
-    _onSessionConnect () {
+    _onSessionConnect() {
         console.info('enter _onSessionConnect');
         // start polling
         // TODO: window?
         // if (board.isReady)
-        this._pollingIntervalID = window.setInterval(this._getSessionData.bind(this), 2000);
+        // this._pollingIntervalID = window.setInterval(this._getSessionData.bind(this), 2000);
     }
 
-    _onSessionMessage () {
+    _onSessionMessage() {
         console.info('enter _onSessionMessage');
     }
 
     // TODO: keep here? / refactor
-    _getSessionData () {
+    _getSessionData() {
 
         if (!this.isConnected()) return;
         // console.info("enter _getSessionData");
@@ -597,7 +611,7 @@ class Arduino {
                     //board.removeAllListeners(`digital-read-${pin[i]}`);
                     digitalArray[digitalPinArray[i]] = value;
                     readDigitalTime = Date.now();
-                   // readDigitalFlag = 1;
+                    // readDigitalFlag = 1;
                     //console.info("response=" + digitalArray+"");
                 });
             }
@@ -632,8 +646,9 @@ class Arduino {
                 board.removeAllListeners(`ping-read-${pinNumber}`);
                 let dis = this.cm;
                 if (this.cm != '0') {
-                    if (Number(this.cm) > 2000)
-                        {dis = 500;}
+                    if (Number(this.cm) > 2000) {
+                        dis = 500;
+                    }
                     // console.info("distance=" + dis + " difftime=");
                     digitalArray[0] = dis;
                     proximity.dis;
@@ -647,13 +662,13 @@ class Arduino {
 
 
     // TODO: keep here? / refactor
-    _tachoValue (list) {
+    _tachoValue(list) {
         const value = list[0] + (list[1] * 256) + (list[2] * 256 * 256) + (list[3] * 256 * 256 * 256);
         return value;
     }
 
     // TODO: keep here? / refactor
-    _array2float (list) {
+    _array2float(list) {
         const buffer = new Uint8Array(list).buffer;
         const view = new DataView(buffer);
         return view.getFloat32(0, true);
@@ -669,7 +684,7 @@ class Scratch3ArduinoBlocks {
      * @param  {object} runtime VM runtime
      * @constructor
      */
-    constructor (runtime) {
+    constructor(runtime) {
         /**
          * The Scratch 3.0 runtime.
          * @type {Runtime}
@@ -684,14 +699,14 @@ class Scratch3ArduinoBlocks {
      * The ID of the extension.
      * @return {string} the id
      */
-    static get EXTENSION_ID () {
+    static get EXTENSION_ID() {
         return 'arduino';
     }
     /**
      * Define the Arduino extension.
      * @return {object} Extension description.
      */
-    getInfo () {
+    getInfo() {
         // console.info('enter arduino getInfo');
         return {
             id: Scratch3ArduinoBlocks.EXTENSION_ID,
@@ -701,8 +716,7 @@ class Scratch3ArduinoBlocks {
             colour: '#FF6680',
             colourSecondary: '#FF4D6A',
             colourTertiary: '#FF3355',
-            blocks: [
-                {
+            blocks: [{
                     opcode: 'setup',
                     blockType: BlockType.HAT,
                     branchCount: 1,
@@ -711,7 +725,7 @@ class Scratch3ArduinoBlocks {
                         default: 'Setup',
                         description: 'arduino setup'
                     }),
-                    arguments: { }
+                    arguments: {}
                 },
                 {
                     opcode: 'loop',
@@ -723,7 +737,7 @@ class Scratch3ArduinoBlocks {
                         default: 'Loop',
                         description: 'arduino loop'
                     }),
-                    arguments: { }
+                    arguments: {}
                 },
                 // {
                 //     opcode: 'variable_create',
@@ -938,9 +952,8 @@ class Scratch3ArduinoBlocks {
      * @private
      */
 
-    get SETPINMODE () {
-        return [
-            {
+    get SETPINMODE() {
+        return [{
                 text: 'Digital Input',
                 value: 0
             },
@@ -962,9 +975,8 @@ class Scratch3ArduinoBlocks {
             }
         ];
     }
-    get SETLEVEL () {
-        return [
-            {
+    get SETLEVEL() {
+        return [{
                 text: 'low',
                 value: 0
             },
@@ -974,57 +986,57 @@ class Scratch3ArduinoBlocks {
             }
         ];
     }
-    get SETVariableType (){
+    get SETVariableType() {
         return Variable_Type;
     }
 
-    get SETBaudrate (){
+    get SETBaudrate() {
         return Baudrate;
     }
 
-    get SETNEWLINE (){
+    get SETNEWLINE() {
         return NEW_LINE;
     }
 
-    _buildMenu (info) {
+    _buildMenu(info) {
         return info.map((entry, index) => {
-        var obj = {};
-        obj.text = formatMessage({
-          id: entry.id,
-          default: entry.name
+            var obj = {};
+            obj.text = formatMessage({
+                id: entry.id,
+                default: entry.name
+            });
+            obj.name = entry.name;
+            obj.value = String(index);
+            obj.colour = '#FF8C00';
+            return obj;
         });
-		obj.name = entry.name;
-        obj.value = String(index);
-		obj.colour = '#FF8C00';
-        return obj;
-      });
     }
-    setup (args){
-		if(args == null){
-			return "";
-		}
-		return String(args);
-	}
-    loop (args){
-		if(args == null){
-			return "";
-		}
-		return String(args);
-	}
-    variable_create (args){
+    setup(args) {
+        if (args == null) {
+            return "";
+        }
+        return String(args);
+    }
+    loop(args) {
+        if (args == null) {
+            return "";
+        }
+        return String(args);
+    }
+    variable_create(args) {
         const variable = String(args.TYPE) + String(args.NAME) + String(args.VALUE);
         return variable;
     }
 
-    serial_begin (args){
+    serial_begin(args) {
         const variable = String(args.TYPE) + String(args.NAME) + String(args.VALUE);
         return variable;
     }
-    serial_print (args){
+    serial_print(args) {
         const variable = String(args.TYPE) + String(args.VALUE) + String(args.NL);
         return variable;
     }
-    pin_mode (args) {
+    pin_mode(args) {
         const pin = Cast.toNumber(args.PIN);
         const mode = Cast.toNumber(args.MODE);
         // if (!VALID_PIN_MODE.includes(mode)) {
@@ -1033,26 +1045,26 @@ class Scratch3ArduinoBlocks {
         return this._device.setPinMode(pin, mode);
     }
 
-    digital_write (args) {
+    digital_write(args) {
         const pin = Cast.toNumber(args.PIN);
         const level = Cast.toNumber(args.LEVEL);
         return this._device.digitalwrite(pin, level);
     }
 
 
-    pwm_write (args) {
+    pwm_write(args) {
         const pin = Cast.toNumber(args.PIN);
         const value = Cast.toNumber(args.VALUE);
         return this._device.analogWrite(pin, value);
     }
 
-    servo_write (args) {
+    servo_write(args) {
         const pin = Cast.toNumber(args.PIN);
         const degree = Cast.toNumber(args.DEGREE);
         return this._device.servoWrite(pin, degree);
     }
 
-    digital_read (args) {
+    digital_read(args) {
         readDigitalFlag == 1;
         const pin = Cast.toNumber(args.PIN);
         const data = this._device.digitalRead(pin);
@@ -1060,22 +1072,22 @@ class Scratch3ArduinoBlocks {
         return data;
     }
 
-    analog_read (args) {
+    analog_read(args) {
         const pin = 14 + Cast.toNumber(args.PIN);
         const data = this._device.digitalRead(pin);
         // console.info("analoglRead data=" + data);
         return data;
 
     }
-    systemUptime () {
+    systemUptime() {
         return 0;
     }
-    whenBrightnessLessThan (args) {
+    whenBrightnessLessThan(args) {
         const brightness = MathUtil.clamp(Cast.toNumber(args.DISTANCE), 0, 100);
 
         return this._device.brightness < brightness;
     }
-    buttonPressed (args) {
+    buttonPressed(args) {
         const port = Cast.toNumber(args.PORT);
 
         if (!VALID_PIN_LEVEL.includes(port)) {
@@ -1084,17 +1096,17 @@ class Scratch3ArduinoBlocks {
 
         return this._device.isButtonPressed(port);
     }
-    getDistance () {
+    getDistance() {
         return this._device.distance;
     }
 
-    getBrightness () {
+    getBrightness() {
         return this._device.brightness;
     }
-    reconnect (id) {
+    reconnect(id) {
         return this._device.connectDevice(id);
     }
-    beep (args) {
+    beep(args) {
         const note = MathUtil.clamp(Cast.toNumber(args.NOTE), 47, 99); // valid Arduino sounds
         let time = Cast.toNumber(args.TIME) * 1000;
         time = MathUtil.clamp(time, 0, 3000);

@@ -19,7 +19,7 @@ class ComPort {
      * @param {object} connectCallback - a callback for connection.
      * @param {object} messageCallback - a callback for message sending.
      */
-    constructor (runtime, connectCallback) {
+    constructor(runtime, connectCallback) {
         this.requestPeripheral(); // only call request device after socket opens
         this.onerror = this._sendError.bind(this, 'ws onerror');
         this.onclose = this._sendError.bind(this, 'ws onclose');
@@ -36,7 +36,7 @@ class ComPort {
      * Request connection to the device.
      * If the web socket is not yet open, request when the socket promise resolves.
      */
-    requestPeripheral () {
+    requestPeripheral() {
         const availablePeripherals = {};
         com.list((err, ports) => {
             console.log('Ports info:');
@@ -63,7 +63,7 @@ class ComPort {
      * callback if connection is successful.
      * @param {number} id - the id of the peripheral to connect to
      */
-    connectPeripheral (id) {
+    connectPeripheral(id) {
         console.info(`enter connectDevice=`);
         console.info(id);
         comName = id;
@@ -94,7 +94,7 @@ class ComPort {
         }
     }
 
-    scheduleJob () {
+    scheduleJob() {
         if (!j) {
             j = schedule.scheduleJob(rule, () => {
                 console.log('The answer to life, the universe, and everything!');
@@ -125,7 +125,7 @@ class ComPort {
     /**
      * Close the Comport.
      */
-    disconnect () {
+    disconnect() {
         console.info('enter disconnectSession ');
         console.log(this._board);
         if (this._board) {
@@ -138,22 +138,22 @@ class ComPort {
     /**
      * @return {bool} whether the peripheral is connected.
      */
-    isConnected () {
+    isConnected() {
         // console.info("getPeripheralIsConnected=" + this._connected);
         return this._connected;
     }
 
-    getBoard () {
+    getBoard() {
         return this._board;
     }
 
-    _sendError (/* e */) {
+    _sendError( /* e */ ) {
         this.disconnectSession();
         // log.error(`BTSession error: ${JSON.stringify(e)}`);
         this._runtime.emit(this._runtime.constructor.PERIPHERAL_ERROR);
     }
 
-    _sendDiscoverTimeout () {
+    _sendDiscoverTimeout() {
         this._runtime.emit(this._runtime.constructor.PERIPHERAL_SCAN_TIMEOUT);
     }
 

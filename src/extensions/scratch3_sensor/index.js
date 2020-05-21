@@ -515,6 +515,81 @@ const VECTOR_TYPE = [{
     }
 ];
 
+const AXIS = [{
+        name: 'x',
+        id: 'sensor.axis.x',
+        value: 0
+    }
+    // {
+    //     name: 'y',
+    //     id: 'sensor.axis.y',
+    //     value: 1
+    // }
+];
+
+const VECTOR_DIRECT = [{
+        name: 'head(arrow end)',
+        id: 'sensor.vectorDirect.head',
+        value: 0
+    }
+    // {
+    //     name: 'tail',
+    //     id: 'sensor.vectorDirect.tail',
+    //     value: 1
+    // }
+];
+
+const WHICH = [{
+        name: 'right front',
+        id: 'sensor.which.rightfront',
+        value: 0
+    },
+    {
+        name: 'left front',
+        id: 'sensor.which.leftfront',
+        value: 1
+    },
+    {
+        name: 'right back',
+        id: 'sensor.which.rightback',
+        value: 2
+    },
+    {
+        name: 'left back',
+        id: 'sensor.which.leftback',
+        value: 3
+    }
+];
+
+const WHEEL_DIRECT = [{
+        name: 'forward',
+        id: 'sensor.wheeldirect.forward',
+        value: 0
+    },
+    {
+        name: 'reverse',
+        id: 'sensor.wheeldirect.reverse',
+        value: 1
+    }
+];
+
+const WHEEL_STATUS = [{
+        name: 'forward',
+        id: 'sensor.wheelstatus.forward',
+        value: 0
+    },
+    {
+        name: 'back',
+        id: 'sensor.wheelstatus.back',
+        value: 1
+    },
+    {
+        name: 'stop',
+        id: 'sensor.wheelstatus.stop',
+        value: 2
+    }
+];
+
 const PIXY2_COMMAND = [{
         name: 'Refresh Data In Tracking Mode',
         id: 'sensor.pixy2Command.refreshData',
@@ -852,6 +927,72 @@ class SensorBlocks {
                             defaultValue: 0
                         }
                     }
+                },
+                {
+                    opcode: 'getVectorLocation',
+                    text: formatMessage({
+                        id: 'sensor.getVectorLocation',
+                        default: 'Pixy2 Get [AXIS] location of the [DIRECTION] of the Vector or line',
+                        description: 'Pixy2 Get (x or y) location of the (head or tail) (arrow end) of the Vector or line'
+                    }),
+                    blockType: BlockType.REPORTER,
+                    arguments: {
+                        AXIS: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'axis',
+                            defaultValue: 0
+                        },
+                        DIRECTION: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'vectorDirect',
+                            defaultValue: 0
+                        }
+                    }
+                },
+                {
+                    opcode: 'mecanumWheelSpeed',
+                    text: formatMessage({
+                        id: 'sensor.mecanumWheelSpeed',
+                        default: 'set mecanum wheel [WHICH] [DIRECT] speed [SPEED]',
+                        description: 'set mecanum wheel [WHICH] [DIRECT] speed [SPEED]'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        WHICH: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'which',
+                            defaultValue: 0
+                        },
+                        DIRECT: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'wheelDirect',
+                            defaultValue: 0
+                        },
+                        SPEED: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 100
+                        }
+                    }
+                },
+                {
+                    opcode: 'mecanumWheelStatus',
+                    text: formatMessage({
+                        id: 'sensor.mecanumWheelStatus',
+                        default: 'mecanum [STATUS] speed [SPEED]',
+                        description: 'mecanum [STATUS] speed [SPEED]'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        STATUS: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'wheelStatus',
+                            defaultValue: 0
+                        },
+                        SPEED: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        }
+                    }
                 }
             ],
 
@@ -875,7 +1016,12 @@ class SensorBlocks {
                 roboRaveTaskType: this._buildMenu(ROBO_RAVE_TASK_TYPE),
                 direction: this._buildMenu(DIRECTION),
                 vectorType: this._buildMenu(VECTOR_TYPE),
-                pixy2Command: this._buildMenu(PIXY2_COMMAND)
+                pixy2Command: this._buildMenu(PIXY2_COMMAND),
+                axis: this._buildMenu(AXIS),
+                vectorDirect: this._buildMenu(VECTOR_DIRECT),
+                which: this._buildMenu(WHICH),
+                wheelDirect: this._buildMenu(WHEEL_DIRECT),
+                wheelStatus: this._buildMenu(WHEEL_STATUS)
             }
         };
     }
@@ -980,6 +1126,15 @@ class SensorBlocks {
     }
     pixy2SetPowerRate(args) {
         return [args.RATE];
+    }
+    getVectorLocation(args) {
+        return [args.AXIS, args.DIRECTION];
+    }
+    mecanumWheelSpeed(args) {
+        return [args.WHICH, args.DIRECT, args.SPEED];
+    }
+    mecanumWheelStatus(args) {
+        return [args.STATUS, args.SPEED];
     }
 }
 

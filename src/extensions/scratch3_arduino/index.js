@@ -717,26 +717,12 @@ class Scratch3ArduinoBlocks {
             colourSecondary: '#FF4D6A',
             colourTertiary: '#FF3355',
             blocks: [{
-                    opcode: 'setup',
+                    opcode: 'arduinostart',
                     blockType: BlockType.HAT,
-                    branchCount: 1,
-                    text: formatMessage({
-                        id: 'arduino.setup',
-                        default: 'Setup',
-                        description: 'arduino setup'
-                    }),
-                    arguments: {}
-                },
-                {
-                    opcode: 'loop',
-                    blockType: BlockType.LOOP,
-                    branchCount: 1,
+                    branchCount: 2,
                     isTerminal: true,
-                    text: formatMessage({
-                        id: 'arduino.loop',
-                        default: 'Loop',
-                        description: 'arduino loop'
-                    }),
+                    text: ["Setup", "Loop"],
+                    func: 'noop',
                     arguments: {}
                 },
                 // {
@@ -1011,18 +997,8 @@ class Scratch3ArduinoBlocks {
             return obj;
         });
     }
-    setup(args) {
-        if (args == null) {
-            return "";
-        }
-        return String(args);
-    }
-    loop(args) {
-        if (args == null) {
-            return "";
-        }
-        return String(args);
-    }
+    noop() {}
+
     variable_create(args) {
         const variable = String(args.TYPE) + String(args.NAME) + String(args.VALUE);
         return variable;

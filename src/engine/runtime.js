@@ -1069,7 +1069,10 @@ class Runtime extends EventEmitter {
                 blockInfo.isEdgeActivated = true;
             }
             blockJSON.outputShape = ScratchBlocksConstants.OUTPUT_SHAPE_SQUARE;
-            blockJSON.nextStatement = null; // null = available connection; undefined = terminal
+            // blockJSON.nextStatement = null; // null = available connection; undefined = terminal
+            if (!blockInfo.isTerminal) {
+                blockJSON.nextStatement = null; // null = available connection; undefined = terminal
+            }
             break;
         case BlockType.CONDITIONAL:
         case BlockType.LOOP:

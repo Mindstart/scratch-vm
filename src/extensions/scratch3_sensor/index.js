@@ -815,20 +815,10 @@ class SensorBlocks {
                     opcode: 'initPixy2',
                     text: formatMessage({
                         id: 'sensor.initPixy2',
-                        default: 'Init Pixy2 Slow Speed [SLOW] Fast Speed [FAST]',
+                        default: 'Init Pixy2',
                         description: 'init pixy2'
                     }),
-                    blockType: BlockType.COMMAND,
-                    arguments: {
-                        SLOW: {
-                            type: ArgumentType.STRING,
-                            defaultValue: '150'
-                        },
-                        FAST: {
-                            type: ArgumentType.STRING,
-                            defaultValue: '300'
-                        }
-                    }
+                    blockType: BlockType.COMMAND
                 },
                 {
                     opcode: 'setRoboRaveTaskType',
@@ -843,25 +833,6 @@ class SensorBlocks {
                             type: ArgumentType.STRING,
                             menu: 'roboRaveTaskType',
                             defaultValue: 0
-                        }
-                    }
-                },
-                {
-                    opcode: 'setMotorSpeedBasedOnPixy2',
-                    text: formatMessage({
-                        id: 'sensor.setMotorSpeedBasedOnPixy2',
-                        default: 'Set Left Motor Speed [LEFT_SPEED], Right Motor Speed [RIGHT_SPEED] Based On Pixy2',
-                        description: 'set motor speed based on pixy2'
-                    }),
-                    blockType: BlockType.COMMAND,
-                    arguments: {
-                        LEFT_SPEED: {
-                            type: ArgumentType.NUMBER,
-                            defaultValue: 100
-                        },
-                        RIGHT_SPEED: {
-                            type: ArgumentType.NUMBER,
-                            defaultValue: 100
                         }
                     }
                 },
@@ -893,37 +864,6 @@ class SensorBlocks {
                         FOUND_VECTOR: {
                             type: ArgumentType.NUMBER,
                             menu: 'vectorType',
-                            defaultValue: 0
-                        }
-                    }
-                },
-                {
-                    opcode: 'pixy2SetPowerRate',
-                    text: formatMessage({
-                        id: 'sensor.pixy2SetPowerRate',
-                        default: 'Pixy2 Set Power Rate [RATE]',
-                        description: 'pixy2 set power rate'
-                    }),
-                    blockType: BlockType.COMMAND,
-                    arguments: {
-                        RATE: {
-                            type: ArgumentType.NUMBER,
-                            defaultValue: 0.5
-                        }
-                    }
-                },
-                {
-                    opcode: 'getLeftOrRightSpeed',
-                    text: formatMessage({
-                        id: 'sensor.getLeftOrRightSpeed',
-                        default: 'Get [DIRECTION] wheel Speed',
-                        description: 'get left or right wheel speed'
-                    }),
-                    blockType: BlockType.REPORTER,
-                    arguments: {
-                        DIRECTION: {
-                            type: ArgumentType.NUMBER,
-                            menu: 'direction',
                             defaultValue: 0
                         }
                     }
@@ -1104,13 +1044,10 @@ class SensorBlocks {
         return [String(args.PORTL), String(args.PORTR)];
     }
     initPixy2(args) {
-        return [args.SLOW, args.FAST];
+        return [];
     }
     setRoboRaveTaskType(args) {
         return [String(args.TASK_TYPE)];
-    }
-    setMotorSpeedBasedOnPixy2(args) {
-        return [args.LEFT_SPEED, args.RIGHT_SPEED];
     }
     refreshDataInTrackingModeFromPixy2(args) {
         return [args.PIXY2_COMMAND];
@@ -1120,12 +1057,6 @@ class SensorBlocks {
     }
     setServoDegree(args) {
         return [args.PIN, args.DEGREE];
-    }
-    getLeftOrRightSpeed(args) {
-        return [args.DIRECTION];
-    }
-    pixy2SetPowerRate(args) {
-        return [args.RATE];
     }
     getVectorLocation(args) {
         return [args.AXIS, args.DIRECTION];

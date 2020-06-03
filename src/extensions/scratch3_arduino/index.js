@@ -311,12 +311,12 @@ const Baudrate = [{
 const VALID_PIN_LEVEL = [0, 1];
 
 const NEW_LINE = [{
-        name: 'WRAP',
+        name: 'WARP',
         id: 'arduino.warp',
         value: 0
     },
     {
-        name: 'NO WRAP',
+        name: 'NO WARP',
         id: 'arduino.nowarp',
         value: 1
     }

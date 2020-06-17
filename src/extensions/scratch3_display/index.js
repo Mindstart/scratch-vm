@@ -216,6 +216,10 @@ const SEGMENT_NUM = [
     {name: '8', value: 8, id: null},
     {name: '9', value: 9, id: null}
 ];
+const COM_TYPE = [
+    {name: 'cathode', value: 0, id: 'display.cathode'},
+    {name: 'anode', value: 1, id: 'display.anode'}
+];
 const BOOL_VAL = [
     {name: 'false', id: 'display.boolFalse', values: 0},
     {name: 'true', id: 'display.boolTrue', values: 1}
@@ -385,11 +389,21 @@ class DisplayBlocks {
                     opcode: 'initOneBitSegment',
                     text: formatMessage({
                         id: 'display.initOneBitSegment',
-                        default: 'Init 1-bit segment A[PIN_A] B[PIN_B] C[PIN_C] D[PIN_D] E[PIN_E] F[PIN_F] G[PIN_G] DP[PIN_DP] COM[PIN_COM]',
+                        default: 'Init 1-bit 7-segment[COM_TYPE] COM[PIN_COM] A[PIN_A] B[PIN_B] C[PIN_C] D[PIN_D] E[PIN_E] F[PIN_F] G[PIN_G] DP[PIN_DP]',
                         description: '1-bit segment'
                     }),
                     blockType: BlockType.COMMAND,
                     arguments: {
+                        COM_TYPE: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'comType',
+                            defaultValue: 0
+                        },
+                        PIN_COM: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
                         PIN_A: {
                             type: ArgumentType.NUMBER,
                             menu: 'digitalPin',
@@ -426,11 +440,6 @@ class DisplayBlocks {
                             defaultValue: 0
                         },
                         PIN_DP: {
-                            type: ArgumentType.NUMBER,
-                            menu: 'digitalPin',
-                            defaultValue: 0
-                        },
-                        PIN_COM: {
                             type: ArgumentType.NUMBER,
                             menu: 'digitalPin',
                             defaultValue: 0
@@ -600,7 +609,8 @@ class DisplayBlocks {
                 segment2Pin: this._buildMenu(SEGMENT2_PIN),
                 pinLevel: this._buildMenu(PIN_LEVEL),
                 boolVal: this._buildMenu(BOOL_VAL),
-                segmentNum: this._buildMenu(SEGMENT_NUM)
+                segmentNum: this._buildMenu(SEGMENT_NUM),
+                comType: this._buildMenu(COM_TYPE)
             }
 
 
@@ -648,7 +658,7 @@ class DisplayBlocks {
         return String(args.VALUE);
     }
     initOneBitSegment (args) {
-        return [args.PIN_A, args.PIN_B, args.PIN_C, args.PIN_D, args.PIN_E, args.PIN_F, args.PIN_G, args.PIN_DP, args.PIN_COM];
+        return [args.COM_TYPE, args.PIN_COM, args.PIN_A, args.PIN_B, args.PIN_C, args.PIN_D, args.PIN_E, args.PIN_F, args.PIN_G, args.PIN_DP];
     }
     oneBitSegment (args) {
         return [String(args.PIN), String(args.VALUE)];

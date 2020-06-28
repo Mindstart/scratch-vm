@@ -389,8 +389,8 @@ class DisplayBlocks {
                     opcode: 'initOneBitSegment',
                     text: formatMessage({
                         id: 'display.initOneBitSegment',
-                        default: 'Init 1-bit 7-segment[COM_TYPE] COM[PIN_COM] A[PIN_A] B[PIN_B] C[PIN_C] D[PIN_D] E[PIN_E] F[PIN_F] G[PIN_G] DP[PIN_DP]',
-                        description: '1-bit segment'
+                        default: 'Init 1 bit[COM_TYPE] 7 segment COM[PIN_COM] A[PIN_A] B[PIN_B] C[PIN_C] D[PIN_D] E[PIN_E] F[PIN_F] G[PIN_G] DP[PIN_DP]',
+                        description: '1 bit segment'
                     }),
                     blockType: BlockType.COMMAND,
                     arguments: {
@@ -450,7 +450,7 @@ class DisplayBlocks {
                     opcode: 'oneBitSegment',
                     text: formatMessage({
                         id: 'display.oneBitSegment',
-                        default: 'Set 1-bit segment [PIN] to [VALUE]',
+                        default: 'Set 1 bit 7 segment [PIN] to [VALUE]',
                         description: 'set 1-bit segment'
                     }),
                     blockType: BlockType.COMMAND,
@@ -471,7 +471,7 @@ class DisplayBlocks {
                     opcode: 'segmentDisplay',
                     text: formatMessage({
                         id: 'display.segmentDisplay',
-                        default: 'segment display number[NUM]',
+                        default: 'Set 1 bit 7 segment display[NUM]',
                         description: 'segment display'
                     }),
                     blockType: BlockType.COMMAND,
@@ -487,7 +487,7 @@ class DisplayBlocks {
                     opcode: 'segmentDisplayTwoDigits',
                     text: formatMessage({
                         id: 'display.segmentDisplayTwoDigits',
-                        default: 'segment display number[NUM]',
+                        default: 'Set 2 bit 7 segment display[NUM]',
                         description: 'segment display'
                     }),
                     blockType: BlockType.COMMAND,
@@ -502,7 +502,7 @@ class DisplayBlocks {
                     opcode: 'segmentDisplayDot',
                     text: formatMessage({
                         id: 'display.segmentDisplayDot',
-                        default: 'segment display dot[BOOLVAL]',
+                        default: 'Set 1 bit 7 segment display dot[BOOLVAL]',
                         description: 'segment display dot'
                     }),
                     blockType: BlockType.COMMAND,
@@ -518,7 +518,7 @@ class DisplayBlocks {
                     opcode: 'initTwoBitSegment',
                     text: formatMessage({
                         id: 'display.initTwoBitSegment',
-                        default: 'Init 2-bit segment A[PIN_A] B[PIN_B] C[PIN_C] D[PIN_D] E[PIN_E] F[PIN_F] G[PIN_G] DP[PIN_DP] COM1[PIN_COM1] COM2[PIN_COM2]',
+                        default: 'Init 2 bit cathode segment A[PIN_A] B[PIN_B] C[PIN_C] D[PIN_D] E[PIN_E] F[PIN_F] G[PIN_G] DP[PIN_DP] COM1[PIN_COM1] COM2[PIN_COM2]',
                         description: '2-bit segment'
                     }),
                     blockType: BlockType.COMMAND,
@@ -579,7 +579,7 @@ class DisplayBlocks {
                     opcode: 'twoBitSegment',
                     text: formatMessage({
                         id: 'display.twoBitSegment',
-                        default: 'Set 2-bit segment [PIN] to [VALUE]',
+                        default: 'Set 2 bit 7 segment [PIN] to [VALUE]',
                         description: 'set 2-bit segment'
                     }),
                     blockType: BlockType.COMMAND,

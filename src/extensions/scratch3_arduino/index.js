@@ -235,11 +235,11 @@ const VALID_PIN_MODE = [0, 1, 2, 3, 4];
  * @type {array}
  */
 const PIN_LEVEL = [{
-    name: 'low',
+    name: 'LOW',
     id: 'arduino.pinLevel.low',
     value: 0
 }, {
-    name: 'high',
+    name: 'HIGH',
     id: 'arduino.pinLevel.high',
     value: 1
 }];
@@ -816,7 +816,7 @@ class Scratch3ArduinoBlocks {
                     opcode: 'digital_write',
                     text: formatMessage({
                         id: 'arduino.digital_write',
-                        default: 'Digital Write [PIN] [LEVEL]',
+                        default: 'Set Digital Pin [PIN] to [LEVEL]',
                         description: 'digital write pin high or low'
                     }),
                     blockType: BlockType.COMMAND,
@@ -837,7 +837,7 @@ class Scratch3ArduinoBlocks {
                     opcode: 'pwm_write',
                     text: formatMessage({
                         id: 'arduino.pwm_write',
-                        default: 'Analog Write [PIN] [VALUE]',
+                        default: 'Set PWM Pin [PIN] to [VALUE]',
                         description: 'Analog write pin'
                     }),
                     blockType: BlockType.COMMAND,
@@ -876,7 +876,7 @@ class Scratch3ArduinoBlocks {
                     opcode: 'digital_read',
                     text: formatMessage({
                         id: 'arduino.digital_read',
-                        default: 'Digital Read [PIN]',
+                        default: 'Digital Read Pin [PIN]',
                         description: 'digital Read pin'
                     }),
                     blockType: BlockType.BOOLEAN,
@@ -892,7 +892,7 @@ class Scratch3ArduinoBlocks {
                     opcode: 'analog_read',
                     text: formatMessage({
                         id: 'arduino.analog_read',
-                        default: 'Analog Read [PIN]',
+                        default: 'Read Analog Pin [PIN]',
                         description: 'Analog Read pin'
                     }),
                     blockType: BlockType.REPORTER,

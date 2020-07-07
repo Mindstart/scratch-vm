@@ -194,12 +194,12 @@ const ANALOG_PIN = [
 ];
 const PIN_LEVEL = [
     {
-        name: 'low',
+        name: 'LOW',
         id: 'sensor.pinLevel.low',
         value: 0
     },
     {
-        name: 'high',
+        name: 'HIGH',
         id: 'sensor.pinLevel.high',
         value: 1
     }

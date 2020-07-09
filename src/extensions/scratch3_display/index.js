@@ -224,6 +224,10 @@ const BOOL_VAL = [
     {name: 'false', id: 'display.boolFalse', values: 0},
     {name: 'true', id: 'display.boolTrue', values: 1}
 ];
+const COMMON_BOOL = [
+    {name: 'false', id: 'display.boolFalse', values: 0},
+    {name: 'true', id: 'display.boolTrue', values: 1}
+];
 const LCD_LINE = [{name: '1', value: 0}, {name: '2', value: 1}];
 const SEGMENT1_PIN = [
     {
@@ -484,21 +488,6 @@ class DisplayBlocks {
                     }
                 },
                 {
-                    opcode: 'segmentDisplayTwoDigits',
-                    text: formatMessage({
-                        id: 'display.segmentDisplayTwoDigits',
-                        default: 'Set 2 bit 7 segment display[NUM]',
-                        description: 'segment display'
-                    }),
-                    blockType: BlockType.COMMAND,
-                    arguments: {
-                        NUM: {
-                            type: ArgumentType.NUMBER,
-                            defaultValue: 0
-                        }
-                    }
-                },
-                {
                     opcode: 'segmentDisplayDot',
                     text: formatMessage({
                         id: 'display.segmentDisplayDot',
@@ -595,6 +584,126 @@ class DisplayBlocks {
                             defaultValue: 0
                         }
                     }
+                },
+                {
+                    opcode: 'segmentDisplayTwoDigits',
+                    text: formatMessage({
+                        id: 'display.segmentDisplayTwoDigits',
+                        default: 'Set 2 bit 7 segment display[NUM] (multiplex)',
+                        description: 'segment display'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        NUM: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        }
+                    }
+                },
+                {
+                    opcode: 'init2BitSegmentLatch',
+                    text: formatMessage({
+                        id: 'display.init2BitSegmentLatch',
+                        default: 'Init 2 bit 7 segment display (latch) data [DATA_PIN] latch [LATCH_PIN] clock [CLOCK_PIN]',
+                        description: '2 bit segment latch'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        DATA_PIN: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
+                        LATCH_PIN: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
+                        CLOCK_PIN: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
+                    }
+                },
+                {
+                    opcode: 'segmentDisplayLatch', 
+                    text: formatMessage({
+                        id: 'display.segmentDisplayLatch',
+                        default: 'Set 2 bit 7 segment display[NUM] (latch)',
+                        description: 'segment display latch'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        NUM: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        }
+                    }
+                },
+                {
+                    opcode: 'reset2BitSegmentLatch',
+                    text: formatMessage({
+                        id: 'display.reset2BitSegmentLatch',
+                        default: 'Reset 2 bit segment (latch)',
+                        description: 'reset segment latch'
+                    }),
+                    blockType: BlockType.COMMAND
+                },
+                {
+                    opcode: 'initTM16374DigitDisplay', 
+                    text: formatMessage({
+                        id: 'display.initTM16374DigitDisplay',
+                        default: 'Init TM1637 4-digit Display CLK [CLK_PIN] DIO [DIO_PIN]',
+                        description: 'Init TM1637 4-digit Display'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        CLK_PIN: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        },
+                        DIO_PIN: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'digitalPin',
+                            defaultValue: 0
+                        }
+                    }                    
+                },
+                {
+                    opcode: 'TM1637Display',
+                    text: formatMessage({
+                        id: 'display.TM1637Display',
+                        default: 'Set TM1637 4-digit Display [NUM] dot [DOT_STATUS] leading_zero [LEADING_ZERO]',
+                        description: 'Set TM1637 4-digit Display'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        NUM: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        DOT_STATUS: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'commonBool',
+                            defaultValue: 0
+                        },
+                        LEADING_ZERO: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'commonBool',
+                            defaultValue: 0
+                        }
+                    }
+                },
+                {
+                    opcode: 'resetTM1637Display',
+                    text: formatMessage({
+                        id: 'display.clearTM1637Display',
+                        default: 'Reset TM1637 4-digit Display',
+                        description: 'Reset TM1637 4-digit Display'
+                    }),
+                    blockType: BlockType.COMMAND
                 }
             ],
 
@@ -610,10 +719,9 @@ class DisplayBlocks {
                 pinLevel: this._buildMenu(PIN_LEVEL),
                 boolVal: this._buildMenu(BOOL_VAL),
                 segmentNum: this._buildMenu(SEGMENT_NUM),
-                comType: this._buildMenu(COM_TYPE)
+                comType: this._buildMenu(COM_TYPE),
+                commonBool: this._buildMenu(COMMON_BOOL)
             }
-
-
         };
     }
 
@@ -677,6 +785,24 @@ class DisplayBlocks {
     }
     twoBitSegment (args) {
         return [String(args.PIN), String(args.VALUE)];
+    }
+    init2BitSegmentLatch (args) {
+        return [args.DATA_PIN, args.LATCH_PIN, args.CLOCK_PIN];
+    }
+    segmentDisplayLatch (args) {
+        return [args.NUM];
+    }
+    reset2BitSegmentLatch (args) {
+        return '';
+    }
+    initTM16374DigitDisplay (args) {
+        return [args.CLK_PIN, args.DIO_PIN];
+    }
+    TM1637Display (args) {
+        return [args.NUM, args.DOT_STATUS, args.LEADING_ZERO];
+    }
+    resetTM1637Display (args) {
+        return '';
     }
 }
 

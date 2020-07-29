@@ -44,7 +44,8 @@ const builtinExtensions = {
     gdxfor: () => require('../extensions/scratch3_gdx_for'),
     sensor: () => require('../extensions/scratch3_sensor'),
     display: () => require('../extensions/scratch3_display'),
-    motor: () => require('../extensions/scratch3_motor')
+    motor: () => require('../extensions/scratch3_motor'),
+    keypad: () => require('../extensions/scratch3_keypad')
 
 };
 

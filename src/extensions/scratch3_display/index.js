@@ -675,7 +675,7 @@ class DisplayBlocks {
                     opcode: 'TM1637Display',
                     text: formatMessage({
                         id: 'display.TM1637Display',
-                        default: 'Set TM1637 4-digit Display [NUM] dot [DOT_STATUS] leading_zero [LEADING_ZERO]',
+                        default: 'Set TM1637 4-digit Display [NUM] colon [DOT_STATUS] leading_zero [LEADING_ZERO]',
                         description: 'Set TM1637 4-digit Display'
                     }),
                     blockType: BlockType.COMMAND,

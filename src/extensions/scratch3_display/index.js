@@ -614,11 +614,16 @@ class DisplayBlocks {
                     blockIconURI: SSD2IconURI,
                     text: formatMessage({
                         id: 'display.init2BitSegmentLatch',
-                        default: 'Init 2 Bit SSD (74HC595) | Data[DATA_PIN] Latch[LATCH_PIN] Clock[CLOCK_PIN]',
+                        default: 'Init 2x1 Bit SSD (74HC595) | [COM_TYPE] Data[DATA_PIN] Latch[LATCH_PIN] Clock[CLOCK_PIN]',
                         description: '2 bit segment latch'
                     }),
                     blockType: BlockType.COMMAND,
                     arguments: {
+                        COM_TYPE: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'comType',
+                            defaultValue: 0
+                        },
                         DATA_PIN: {
                             type: ArgumentType.NUMBER,
                             menu: 'digitalPin',
@@ -641,7 +646,7 @@ class DisplayBlocks {
                     blockIconURI: SSD2IconURI,
                     text: formatMessage({
                         id: 'display.segmentDisplayLatch',
-                        default: 'Set 2 Bit SSD (74HC595) | [NUM] Left Most Zero[LEADING_ZERO]',
+                        default: 'Set 2x1 Bit SSD (74HC595) | [NUM] Left Most Zero[LEADING_ZERO] Left Most DP[LEFT_DP] Right Most DP[RIGHT_DP]',
                         description: 'segment display latch'
                     }),
                     blockType: BlockType.COMMAND,
@@ -654,19 +659,7 @@ class DisplayBlocks {
                             type: ArgumentType.NUMBER,
                             menu: 'commonBool',
                             defaultValue: 0
-                        }
-                    }
-                },
-                {
-                    opcode: 'segmentDisplayLatchDP',
-                    blockIconURI: SSD2IconURI,
-                    text: formatMessage({
-                        id: 'display.segmentDisplayLatchDP',
-                        default: 'Set 2 Bit SSD (74HC595) | Left Most DP[LEFT_DP] Right Most DP[RIGHT_DP]',
-                        description: 'segment display latch DP'
-                    }),
-                    blockType: BlockType.COMMAND,
-                    arguments: {
+                        },
                         LEFT_DP: {
                             type: ArgumentType.NUMBER,
                             menu: 'commonBool',
@@ -869,10 +862,10 @@ class DisplayBlocks {
         return [String(args.PIN), String(args.VALUE)];
     }
     init2BitSegmentLatch (args) {
-        return [args.DATA_PIN, args.LATCH_PIN, args.CLOCK_PIN];
+        return [args.COM_TYPE, args.DATA_PIN, args.LATCH_PIN, args.CLOCK_PIN];
     }
     segmentDisplayLatch (args) {
-        return [args.NUM, args.LEADING_ZERO];
+        return [args.NUM, args.LEADING_ZERO, args.LEFT_DP, args.RIGHT_DP];
     }
     reset2BitSegmentLatch (args) {
         return '';
@@ -882,9 +875,6 @@ class DisplayBlocks {
     }
     TM1637Display (args) {
         return [args.NUM, args.DOT_STATUS, args.LEADING_ZERO];
-    }
-    segmentDisplayLatchDP (args) {
-        return [args.LEFT_DP, args.RIGHT_DP];
     }
     resetTM1637Display (args) {
         return '';

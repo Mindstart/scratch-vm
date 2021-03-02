@@ -106,6 +106,21 @@ const DIGITAL_PIN = [{
     }
 ];
 
+const SDA_PIN = [{name: 'A4', value: 18}];
+const SCL_PIN = [{name: 'A5', value: 19}];
+
+const A0_A1_A2_STATUS = [
+    {name: 'A0=Off A1=Off A2=Off 0x20', value: 0},
+    {name: 'A0=On A1=Off A2=Off 0x21', value: 1},
+    {name: 'A0=Off A1=On A2=Off 0x22', value: 2},
+    {name: 'A0=On A1=On A2=Off 0x23', value: 3},
+    {name: 'A0=Off A1=Off A2=On 0x24', value: 4},
+    {name: 'A0=On A1=Off A2=On 0x25', value: 5},
+    {name: 'A0=Off A1=On A2=on 0x26', value: 6},
+    {name: 'A0=On A1=On A2=On 0x27', value: 7},
+    {name: 'A0=Off A1=Off A2=Off 0x37', value: 8}
+];
+
 class Keypad {
     constructor(runtime) {
         /**
@@ -176,7 +191,30 @@ class Keypad {
                     }
                 },
                 {
-                    opcode: 'Init I2C 4x3 Keypad (SDA=A4 SCL=A5) A0[A0_STATUS] A1[A1_STATUS] A2[A2_STATUS]',
+                    opcode: 'initKeypad4X3I2C',
+                    text: formatMessage({
+                        id: 'keypad.initKeypad4X3I2C',
+                        default: 'Init I2C 4x3 Keypad (PCF8574) | SDA[SDA_PIN] SCL[SCL_PIN] Addr[A0_A1_A2_STATUS]',
+                        description: 'initKeypad4X3I2c'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        SDA_PIN: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'SDAPin',
+                            defaultValue: 0
+                        },
+                        SCL_PIN: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'SCLPin',
+                            defaultValue: 0
+                        },
+                        A0_A1_A2_STATUS: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'addrSwitch',
+                            defaultValue: 0
+                        }
+                    }
                 },
                 {
                     opcode: 'gotKeyValue',
@@ -200,7 +238,10 @@ class Keypad {
 
             // Optional: define extension-specific menus here.
             menus: {
-                digitalPin: this._buildMenu(DIGITAL_PIN)
+                digitalPin: this._buildMenu(DIGITAL_PIN),
+                SDAPin: this._buildMenu(SDA_PIN),
+                SCLPin: this._buildMenu(SCL_PIN),
+                addrSwitch: this._buildMenu(A0_A1_A2_STATUS)
             }
 
 
@@ -239,6 +280,9 @@ class Keypad {
     }
     initKeypad4X3(args) {
         return [args.ROW_1, args.ROW_2, args.ROW_3, args.ROW_4, args.COLUMN_1, args.COLUMN_2, args.COLUMN_3];
+    }
+    initKeypad4X3I2C(args) {
+        return [args.SDA_PIN, args.SCL_PIN, args.A0_A1_A2_STATUS];
     }
     gotKeyValue(args) {
         return [];
